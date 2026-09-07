@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | Project Lighthouse{% endblock %}
+
+{% block content %}
+<main class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">LOGIN</h2>
+    <p class="auth-subtitle">Access your Project Lighthouse dashboard</p>
+    
+    <form method="POST" class="auth-form">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <p>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+
+          {% if field.errors %}
+            <div class="error-wrapper show">
+              <div class="error-wrapper-content">
+                <div class="auth-error-container">
+                  {% for error in field.errors %}
+                    <p class="auth-error-text">{{ error }}</p>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </p>
+      {% endfor %}
+
+      <!-- Error message positioned at the bottom before the submit button -->
+      {% if form.non_field_errors %}
+        <div class="error-wrapper show">
+          <div class="error-wrapper-content">
+            <div class="auth-error-container">
+              {% for error in form.non_field_errors %}
+                <p class="auth-error-text">{{ error }}</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <button type="submit" class="auth-btn">Login</button>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account? <a href="{% url 'register' %}" class="auth-link">Register here</a>
+    </p>
+  </div>
+</main>
+{% endblock %}

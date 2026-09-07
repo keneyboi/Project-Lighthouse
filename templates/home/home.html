@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Project Lighthouse{% endblock %}
+
+{% block content %}
+<main class="dashboard-container">
+\
+  <header class="dashboard-header">
+    <div>
+      <h1 class="dashboard-title">DASHBOARD</h1>
+      <p class="dashboard-subtitle">Welcome back, <strong class="user-highlight">{{ user.username }}</strong></p>
+    </div>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="logout-btn">Logout</button>
+    </form>
+  </header>
+
+  <section class="dashboard-grid">
+    <div class="dash-card">
+      <span class="dash-card-label">ACCOUNT STATUS</span>
+      <div class="dash-card-value" style="color: #4cd964;">ACTIVE</div>
+      <p class="dash-card-desc">System permissions operational</p>
+    </div>
+
+    <div class="dash-card">
+      <span class="dash-card-label">SECURITY LEVEL</span>
+      <div class="dash-card-value">TIER 1</div>
+      <p class="dash-card-desc">Standard user authentication</p>
+    </div>
+
+    <div class="dash-card">
+      <span class="dash-card-label">SESSION ID</span>
+      <div class="dash-card-value">#8F92-LH</div>
+      <p class="dash-card-desc">Connected securely</p>
+    </div>
+  </section>
+
+  
+</main>
+{% endblock %}

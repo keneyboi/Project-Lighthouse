@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Project Lighthouse{% endblock %}</title>
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+</head>
+
+    
+    <header class="main-header">
+  <!-- Top Emergency Ticker Bar -->
+  <div class="emergency-bar">
+    <div class="ticker-content">
+      <span>IN IMMEDIATE DANGER? CALL 911</span>   |   
+      <span>PNP ALANG PULIS: 0919-777-7377</span>   |   
+      <span>DSWD HOTLINE: (02) 8931-8101</span>   |   
+      <span>IN IMMEDIATE DANGER? CALL 911</span>   |   
+      <span>PNP ALANG PULIS: 0919-777-7377</span>   |   
+      <span>DSWD HOTLINE: (02) 8931-8101</span>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="logo-text">PROJECT LIGHTHOUSE</span>
+      <span class="logo-divider">· — — · — · — — — · — — — · — — · — — · — —</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#get-help">Get Help</a></li>
+      <li><a href="{% url 'login' %}">Login</a></li>
+    </ul>
+
+    <a href="https://www.google.com" class="quick-exit-btn">Quick Exit (ESC)</a>
+  </nav>
+</header>
+<body>
+    <div class="container">
+        {% block content %}
+       
+        {% endblock %}
+    </div>
+</body>
+</html>

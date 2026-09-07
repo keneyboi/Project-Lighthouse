@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | Project Lighthouse{% endblock %}
+
+{% block content %}
+<main class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">REGISTER</h2>
+    <p class="auth-subtitle">Create an account for Project Lighthouse</p>
+    
+    <form method="POST" class="auth-form">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <p>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          
+      
+          {% if field.errors %}
+            <div class="auth-error-container">
+              {% for error in field.errors %}
+                <p class="auth-error-text">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </p>
+      {% endfor %}
+
+
+      {% if form.non_field_errors %}
+        <div class="auth-error-container">
+          {% for error in form.non_field_errors %}
+            <p class="auth-error-text">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <button type="submit" class="auth-btn">Register Account</button>
+    </form>
+    
+    <p class="auth-footer">
+      Already have an account? <a href="{% url 'login' %}" class="auth-link">Login here</a>
+    </p>
+  </div>
+</main>
+{% endblock %}
