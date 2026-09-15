@@ -1,0 +1,88 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+{% block extra_css %}
+  <!-- Link your extracted CSS file here -->
+  <link rel="stylesheet" href="{% static 'css/user_settings/user_settings.css' %}">
+{% endblock %}
+{% block dashboard_content %}
+<header class="dashboard-header">
+  <div>
+    <h1 class="dashboard-title">SETTINGS</h1>
+  </div>
+</header>
+
+<div style="display: flex; flex-direction: column; gap: 24px;">
+  <!-- Protocol Checklist Management -->
+  <div class="location-form-card">
+    <h3 class="panel-title" style="margin-bottom: 16px;">Emergency Protocol Checklist</h3>
+
+
+    <!-- Add New Protocol -->
+    <form method="POST" action="{% url 'settings' %}" class="location-form" style="margin-bottom: 24px;">
+      {% csrf_token %}
+      <input type="hidden" name="action_type" value="add_protocol">
+      
+      <div class="form-group">
+        <label for="title" class="form-label"></label>
+        <input type="text" id="title" name="title" placeholder="Protocol Step Title" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Staff Action Details</label>
+        <textarea id="description" name="description" placeholder="Specify instructions for your personnel..." required></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-secondary" style="max-width: 200px;">Add Protocol</button>
+      </div>
+    </form>
+
+    <!-- Existing Protocols List -->
+    <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #282828; padding-top: 20px;">
+      {% for item in protocols %}
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; background-color: #0d0d0d; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
+          <div>
+            <h4 style="font-size: 14px; color: #ffffff; margin: 0 0 4px 0;">{{ item.title }}</h4>
+            <p style="font-size: 13px; color: #aaaaaa; margin: 0;">{{ item.description }}</p>
+          </div>
+          <form method="POST" action="{% url 'settings' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action_type" value="delete_protocol">
+            <input type="hidden" name="protocol_id" value="{{ item.id }}">
+            <button type="submit" style="background: none; border: none; color: #ff5555; cursor: pointer; font-size: 13px; font-weight: 600;">Remove</button>
+          </form>
+        </div>
+      {% empty %}
+        <p class="dash-card-desc">No custom protocols added yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Location Management & Danger Zone -->
+  <div class="location-form-card">
+    <h3 class="panel-title" style="margin-bottom: 6px;">Manage Locations</h3>
+    <p class="dash-card-desc" style="margin-bottom: 20px;">Remove inactive branches or physical safe haven entries.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      {% for location in locations %}
+        <div style="display: flex; justify-content: space-between; align-items: center; background-color: #0d0d0d; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
+          <div>
+            <h4 style="font-size: 15px; color: #ffffff; margin: 0 0 4px 0;">{{ location.name }}</h4>
+            <p style="font-size: 13px; color: #888888; margin: 0;">{{ location.address }}</p>
+          </div>
+          
+          <form method="POST" action="{% url 'settings' %}" onsubmit="return confirm('Are you sure you want to delete this safe haven location? This action cannot be undone.');">
+            {% csrf_token %}
+            <input type="hidden" name="action_type" value="delete_location">
+            <input type="hidden" name="location_id" value="{{ location.id }}">
+            <button type="submit" class="logout-btn-sidebar" style="width: auto; padding: 8px 16px;">Delete Location</button>
+          </form>
+        </div>
+      {% empty %}
+        <p class="dash-card-desc">No locations registered to manage.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

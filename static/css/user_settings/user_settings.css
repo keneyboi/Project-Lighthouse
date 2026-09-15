@@ -1,0 +1,105 @@
+/* --- USER SETTINGS LAYOUT & FORM CARDS --- */
+.location-form-card {
+  width: 100%;
+  background-color: #141414;
+  border: 1px solid #282828;
+  border-radius: 12px;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.location-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* --- FORM CONTROLS, INPUTS & TEXTAREAS --- */
+.location-form input[type="text"],
+.location-form textarea {
+  width: 100%;
+  background-color: #0d0d0d;
+  border: 1px solid #282828;
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.location-form input[type="text"] {
+  padding: 12px 16px;
+}
+
+.location-form textarea {
+  padding: 12px 16px;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.location-form input[type="text"]:focus,
+.location-form textarea:focus {
+  outline: none;
+  border-color: #ff9d42;
+  box-shadow: 0 0 0 2px rgba(255, 157, 66, 0.15);
+}
+
+/* --- BUTTONS & DESCRIPTIVE TEXT --- */
+.dash-card-desc {
+  font-size: 12px;
+  color: #666666;
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background-color: #282828;
+  border: 1px solid #383838;
+  color: #ffffff;
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #333333;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+.logout-btn-sidebar {
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid #383838;
+  color: #ff5555;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.logout-btn-sidebar:hover {
+  background-color: #ff5555;
+  border-color: #ff5555;
+  color: #ffffff;
+}

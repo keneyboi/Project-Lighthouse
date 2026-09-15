@@ -1,68 +1,72 @@
+/* --- FONTS --- */
 @font-face {
-    font-family: 'Doto';
-    src: url('../fonts/Doto-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
+  font-family: 'Doto';
+  src: url('../fonts/Doto-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Doto';
-    src: url('../fonts/Doto-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
+  font-family: 'Doto';
+  src: url('../fonts/Doto-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Doto';
-    src: url('../fonts/Doto-Black.ttf') format('truetype');
-    font-weight: 900;
-    font-style: normal;
+  font-family: 'Doto';
+  src: url('../fonts/Doto-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'SF Pro Display';
-    src: url('../fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
-    font-weight: 400;
+  font-family: 'SF Pro Display';
+  src: url('../fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+  font-weight: 400;
 }
 
 @font-face {
-    font-family: 'SF Pro Display';
-    src: url('../fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
-    font-weight: 700;
+  font-family: 'SF Pro Display';
+  src: url('../fonts/SFPRODISPLAYBOLD.OTF') format('opentype');
+  font-weight: 700;
 }
 
-/* Update body styles to include fixed cover background */
-body {
-  margin: 0;
-  padding: 0;
+/* --- BASE LAYOUT & BODY RESET --- */
+html, body {
   width: 100%;
   min-height: 100vh;
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #0d0d0d;
   color: #ffffff;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
+}
 
-  /* Background Image Setup */
+body {
   background-image: 
-    linear-gradient(rgba(13, 13, 13, 0.85), rgba(13, 13, 13, 0.85)), /* Dark overlay for readability */
+    linear-gradient(rgba(13, 13, 13, 0.85), rgba(13, 13, 13, 0.85)),
     url('../images/home_background.png');
-    background-size: cover;
+  background-size: cover;
   background-position: left;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
-/* Ensure container sits transparently on top of background */
-/* Container base styling */
+/* --- MAIN CONTAINERS & TRANSITIONS --- */
 .container {
   width: 100%;
   min-height: calc(100vh - 120px);
   position: relative;
   z-index: 1;
-  /* Default entrance animation: slides in from the right */
   animation: slideInFromRight 0.9s cubic-bezier(0.25, 1, 0.5, 0.9) forwards;
 }
 
-/* Page Entry: Slide in from Right */
+.container.slide-out-left {
+  animation: slideOutToLeft 0.9s cubic-bezier(0.25, 0, 0.75, 0) forwards;
+}
+
 @keyframes slideInFromRight {
   from {
     opacity: 0;
@@ -72,11 +76,6 @@ body {
     opacity: 1;
     transform: translateX(0);
   }
-}
-
-/* Page Exit: Slide out to Left */
-.container.slide-out-left {
-  animation: slideOutToLeft 0.9s cubic-bezier(0.25, 0, 0.75, 0) forwards;
 }
 
 @keyframes slideOutToLeft {
@@ -90,7 +89,7 @@ body {
   }
 }
 
-/* CSS Styling */
+/* --- HEADER & NAVIGATION --- */
 .main-header {
   width: 100%;
   background-color: #000000;
@@ -98,7 +97,6 @@ body {
   font-family: 'Doto', sans-serif;
 }
 
-/* Emergency Top Bar */
 .emergency-bar {
   background-color: #7a1c1c;
   color: #ffffff;
@@ -121,7 +119,6 @@ body {
   100% { transform: translate3d(-100%, 0, 0); }
 }
 
-/* Main Navigation Bar */
 .navbar {
   display: flex;
   align-items: center;
@@ -147,15 +144,14 @@ body {
   font-size: 14px;
 }
 
-/* Pushes nav links and any subsequent right-side elements to the far right */
 .nav-links {
   display: flex;
   list-style: none;
   gap: 28px;
   margin: 0;
   padding: 0;
-  margin-left: auto;   /* Pushes list to the right edge */
-  margin-right: 28px;  /* Space between links and Quick Exit button */
+  margin-left: auto;
+  margin-right: 28px;
 }
 
 .nav-links a {
@@ -170,7 +166,6 @@ body {
   color: #ffa542;
 }
 
-/* Quick Exit Button */
 .quick-exit-btn {
   background-color: #ff9d42;
   color: #ffffff;
@@ -186,587 +181,17 @@ body {
   background-color: #e68832;
 }
 
-html, body {
-  width: 100%;
-  min-height: 100vh;
-  background-color: #0d0d0d;
-  color: #ffffff;
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow-x: hidden;
-}
-
-/* --- AUTHENTICATION PAGES STYLING --- */
-
-/* Main layout wrapper to center forms */
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 120px); /* Centers form below header */
-  padding: 40px 20px;
-}
-
-/* Form Container Card */
-.auth-card {
-  background-color: #141414;
-  border: 1px solid #282828;
-  border-radius: 16px;
-  padding: 60px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-
-}
-
-
-/* Keyframes for smooth entrance of error containers */
-@keyframes fadeInSlideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-    max-height: 0;
-    margin-top: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    max-height: 120px;
-    margin-top: 12px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-}
-
-
-/* Card Titles using Doto Font */
-.auth-title {
-  font-family: 'Doto', sans-serif;
-  font-weight: 900;
-  font-size: 40px;
-  letter-spacing: 2px;
-  color: #ffffff;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-.auth-subtitle {
-  font-size: 13px;
-  color: #888888;
-  margin-bottom: 28px;
-}
-
-/* Django Form (`{{ form.as_p }}`) Wrapper Overrides */
-.auth-form p {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.auth-form label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #cccccc;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.auth-form input[type="text"],
-.auth-form input[type="password"],
-.auth-form input[type="email"] {
-  width: 90%;
-  padding: 12px 20px;
-  background-color: #000000;
-  border: 1px solid #333333;
-  border-radius: 8px;
-  color: #ffffff;
-  font-family: 'SF Pro Display', sans-serif;
-  font-size: 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  outline: none;
-}
-
-.auth-form input:hover {
-  border-color: #ffffff;
-  box-shadow: 0 0 0 2px rgba(255, 157, 66, 0.2);
-}
-
-/* Form Help Text & Errors */
-.auth-form .helptext {
-  font-size: 11px;
-  color: #666666;
-  margin-top: 6px;
-  line-height: 1.4;
-}
-
-.auth-error-container {
-  overflow: hidden;
-  background-color: #282828;
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-top: 12px;
-  margin-bottom: 8px;
-  animation: fadeInSlideDown 0.60s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.auth-error-text {
-  color: #afafaf;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.4;
-  margin: 0 !important;
-  text-align: left;
-}
-
-.auth-form .errorlist {
-  list-style: none;
-  color: #afafaf;
-  font-size: 12px;
-  margin-bottom: 12px;
-  padding: 0;
-}
-
-
-
-/* Submit Action Button */
-.auth-btn {
-  width: 100%;
-  padding: 12px 20px;
-  margin-top: 10px;
-  background-color: #ff9d42;
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  font-family: 'SF Pro Display', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.auth-btn:hover {
-  background-color: #e68832;
-}
-
-.auth-btn:active {
-  transform: scale(0.98);
-}
-
-/* Footer Link Area */
-.auth-footer {
-  margin-top: 24px;
-  font-size: 13px;
-  color: #888888;
-  text-align: center;
-}
-
-.auth-link {
-  color: #ff9d42;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s ease;
-}
-
-.auth-link:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-
-/* Dashboard Main Wrapper */
-.dashboard-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 24px;
-}
-
-/* Header Bar */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #282828;
-}
-
-.dashboard-title {
-  font-family: 'Doto', sans-serif;
-  font-weight: 900;
-  font-size: 36px;
-  letter-spacing: 2px;
-  color: #ffffff;
-  margin: 0 0 6px 0;
-}
-
-.dashboard-subtitle {
-  font-size: 14px;
-  color: #888888;
-  margin: 0;
-}
-
-.user-highlight {
-  color: #ff9d42;
-}
-
-/* Logout Button */
-.logout-btn {
-  background-color: #282828;
-  color: #ffffff;
-  border: 1px solid #383838;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-family: 'SF Pro Display', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
-}
-
-.logout-btn:hover {
-  background-color: #ff5555;
-  border-color: #ff5555;
-  color: #ffffff;
-}
-
-.logout-btn:active {
-  transform: scale(0.97);
-}
-
-/* Grid Layout for Stats Cards */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
-}
-
-/* Modular Dashboard Panel Cards */
-.dash-card {
-  background-color: #141414;
-  border: 1px solid #282828;
-  border-radius: 12px;
-  padding: 24px;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.dash-card:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-  border-color: #383838;
-}
-
-.dash-card-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #888888;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.dash-card-value {
-  font-family: 'Doto', sans-serif;
-  font-weight: 700;
-  font-size: 28px;
-  color: #ffffff;
-  margin: 12px 0 6px 0;
-}
-
-.dash-card-desc {
-  font-size: 12px;
-  color: #666666;
-  margin: 0;
-}
-
-/* Panel Sections */
-.main-panel {
-  margin-top: 12px;
-}
-
-.panel-title {
-  font-family: 'Doto', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 1px;
-  color: #ffffff;
-  margin: 0 0 12px 0;
-}
-
-.panel-text {
-  font-size: 14px;
-  color: #aaaaaa;
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* Landing HTML */
-/* --- HERO SECTION STYLING --- */
-
-  /* Local Hero Styles */
-  .hero-wrapper {
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: calc(100vh - 120px);
-    padding: 40px 12% 120px 12%; 
-    box-sizing: border-box;
-    width: 100%;
-    background-image: url('../images/home_background.png');
-    background-size: cover;
-    background-position: left;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-
-  .hero-box {
-    max-width: 620px;
-    text-align: center;
-    z-index: 2;
-  }
-
-  .hero-sub {
-    display: block;
-    font-family: 'Doto', monospace, sans-serif !important;
-    font-weight: 600;
-    font-size: 24px;
-    letter-spacing: 6px;
-    color: #cccccc !important;
-    margin-bottom: -5px;
-    text-transform: uppercase;
-  }
-
-  .hero-main-title {
-    font-family: 'Doto', monospace, sans-serif ;
-    font-weight: 600 ;
-    font-size: clamp(3rem, 6.5vw, 10rem) ;
-    letter-spacing: 4px;
-    color: #ffffff ;
-    margin: 0 ;
-    line-height: 1.1;
-    text-transform: uppercase;
-  }
-
-  .hero-morse {
-    font-family: 'Doto', monospace, sans-serif !important;
-    font-weight: 900;
-    font-size: 14px;
-    letter-spacing: 4px;
-    text-align: center;
-    color: #888888 !important;
-    margin: 0 0 12px 0;
-  }
-
-  .hero-desc {
-    font-family: 'SF Pro Display', -apple-system, sans-serif !important;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #dddddd !important;
-    margin: 0 auto 32px auto;
-  }
-
-  .hero-btns {
-    display: flex !important;
-    gap: 16px !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-
-  .btn-action {
-    display: inline-block !important;
-    padding: 12px 28px !important;
-    border-radius: 24px !important;
-    font-family: 'SF Pro Display', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    text-decoration: none !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .btn-white {
-    background-color: #ffffff !important;
-    color: #0d0d0d !important;
-    border: 1px solid #ffffff !important;
-  }
-
-  .btn-white:hover {
-    background-color: #ff9d42 !important;
-    border-color: #ff9d42 !important;
-    color: #ffffff !important;
-  }
-
-  .btn-dark {
-    background-color: rgba(20, 20, 20, 0.7) !important;
-    color: #ffffff !important;
-    border: 1px solid #666666 !important;
-  }
-
-  .btn-dark:hover {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    border-color: #ffffff !important;
-  }
-
-  @media (max-width: 900px) {
-    .hero-wrapper {
-      justify-content: center !important;
-    }
-    .hero-btns {
-      flex-direction: column !important;
-    }
-    .btn-action {
-      width: 100% !important;
-    }
-  }
-
- /* --- STATS SECTION (Pinned above bottom border/testimonials) --- */
-
-.stats-section {
-  position: absolute;
-  bottom: 24px; /* Positioned right above the testimonial border line */
-  right: 8%;    /* Aligned with the right edge of the hero box */
-  display: flex;
-  gap: 48px;
-  z-index: 5;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-number {
-  display: block;
-  font-family: 'Doto', sans-serif;
-  font-weight: 700;
-  font-size: 22px;
-  color: #ffffff;
-  letter-spacing: 1px;
-}
-
-.stat-label {
-  display: block;
-  font-family: 'Doto', sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  color: #a0a0a0;
-  letter-spacing: 1.5px;
-  margin-top: 4px;
-}
-
-
-/* --- INFINITE CAROUSEL TESTIMONIALS --- */
-
-.testimonials-section {
-  width: 100%;
-  overflow: hidden; /* Clips cards sliding past edges */
-  padding: 30px 0;
-  background: linear-gradient(180deg, rgba(20, 20, 20, 0.4) 0%, rgba(10, 10, 10, 0.85) 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  z-index: 10;
-  box-sizing: border-box;
-
-  /* Optional: Smooth fade effect on left & right edges */
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-
-.carousel-track {
-  display: flex;
-  gap: 20px;
-  width: max-content; /* Expands width to hold all cards in one line */
-  animation: marqueeScroll 50s linear infinite;
-}
-
-/* Pause scroll when user hovers over any card */
-.carousel-track:hover {
-  animation-play-state: paused;
-}
-
-/* Keyframe animation for infinite horizontal movement */
-@keyframes marqueeScroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%); /* Moves exactly half the track width for seamless loop */
-  }
-}
-
-.testimonial-card {
-  width: 360px;
-  min-width: 360px;
-  background-color: rgba(35, 35, 35, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  backdrop-filter: blur(8px);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-  box-sizing: border-box;
-}
-
-.testimonial-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.testimonial-text {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #cccccc;
-  margin: 0 0 16px 0;
-  text-align: left;
-}
-
-.testimonial-author {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  color: #ffffff;
-  text-align: right;
-  display: block;
-}
-
-
-/* --- RESPONSIVE ADJUSTMENTS --- */
-
-@media (max-width: 900px) {
-  .hero-wrapper {
-    align-items: center;
-    padding-bottom: 160px;
-  }
-
-  .stats-section {
-    position: relative;
-    bottom: auto;
-    right: auto;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 40px;
-  }
-
-  .testimonials-section {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Parent wrapper to force side-by-side flex alignment */
+/* --- DASHBOARD BASE LAYOUT & SIDEBAR --- */
 .dashboard-wrapper {
   display: flex;
-  min-height: calc(100vh - 120px); /* Accounts for main navbar height */
+  min-height: calc(100vh - 120px);
   width: 100%;
   align-items: stretch;
 }
 
 .dashboard-sidebar {
   width: 240px;
-  flex-shrink: 0; /* Prevents sidebar from collapsing */
+  flex-shrink: 0;
   background-color: #141414;
   border-right: 1px solid #282828;
   display: flex;
@@ -821,7 +246,6 @@ html, body {
 }
 
 .logout-btn-sidebar {
-
   padding: 10px;
   background-color: #282828;
   border: 1px solid #383838;
@@ -844,95 +268,48 @@ html, body {
 
 .dashboard-main-content {
   flex: 1;
-  min-width: 0; /* Prevents flex child grid items from overflowing screen width */
+  min-width: 0;
   padding: 40px;
   box-sizing: border-box;
   overflow-y: auto;
 }
 
-/* add location css */
-
-/* Container Layout */
-.location-form-card {
-  width: 100%;
-  background-color: #141414;
-  border: 1px solid #282828;
-  border-radius: 12px;
-  padding: 32px;
-  box-sizing: border-box;
-  margin-top: 24px;
-}
-
-.location-form {
+.dashboard-header {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #282828;
 }
 
-/* Fields & Labels */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.form-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  color: #888888;
-  text-transform: uppercase;
-}
-
-/* Targets all Django form inputs including textarea */
-.location-form input[type="text"],
-.location-form input[type="password"],
-.location-form input[type="email"],
-.location-form textarea,
-.location-form select {
-  width: 100%;
-  padding: 12px 16px;
-  background-color: #0d0d0d;
-  border: 1px solid #282828;
-  border-radius: 8px;
+.dashboard-title {
+  font-family: 'Doto', sans-serif;
+  font-weight: 900;
+  font-size: 36px;
+  letter-spacing: 2px;
   color: #ffffff;
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  margin: 0 0 6px 0;
+}
+
+.dashboard-subtitle {
   font-size: 14px;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color: #888888;
+  margin: 0;
 }
 
-.location-form textarea {
-  min-height: 110px;
-  resize: vertical;
+.panel-title {
+  font-family: 'Doto', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin: 0 0 12px 0;
 }
 
-.location-form input:focus,
-.location-form textarea:focus {
-  outline: none;
-  border-color: #ff9d42;
-  box-shadow: 0 0 0 2px rgba(255, 157, 66, 0.15);
-}
-
-.form-error {
-  color: #ff5555;
-  font-size: 12px;
-  margin-top: 2px;
-}
-
-/* Matching Action Buttons */
-.form-actions {
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
-  width: 100%;
-}
-
+/* --- REUSABLE BUTTON PRIMITIVES --- */
 .btn-primary,
 .btn-secondary {
-  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -971,43 +348,32 @@ html, body {
   color: #ffffff;
 }
 
-.protocol-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 16px;
-  width: 100%;
-}
-
-.protocol-card {
-  background-color: #141414;
-  border: 1px solid #282828;
-  border-radius: 8px;
-  padding: 20px;
-  box-sizing: border-box;
+/* --- FORM GROUP PRIMITIVES --- */
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: border-color 0.2s ease;
+  width: 100%;
 }
 
-.protocol-card:hover {
-  border-color: #383838;
-}
-
-.protocol-title {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 20px;
+.form-label {
+  font-size: 11px;
   font-weight: 700;
-  color: #FFFFFF;
-  margin: 0;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.8px;
+  color: #888888;
+  text-transform: uppercase;
 }
 
-.protocol-desc {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #cccccc;
-  margin: 0;
+.form-error {
+  color: #ff5555;
+  font-size: 12px;
+  margin-top: 2px;
 }
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  width: 100%;
+}
+

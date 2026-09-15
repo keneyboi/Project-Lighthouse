@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Project Lighthouse{% endblock %}</title>
+    {% block extra_css %}
+    
+    {% endblock %}
     <link rel="stylesheet" href="{% static "css/styles.css" %}">
 </head>
 
@@ -30,12 +33,12 @@
     </div>
 
     <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
+      <li><a href="{% url 'landing' %}">Home</a></li>
       <li><a href="#safe-havens">Safe Havens</a></li>
       <li><a href="#how-it-works">How It Works</a></li>
       <li>
         {% if user.is_authenticated %}
-        <span class="user-greeting">Hello {{ user.first_name }}!</span>
+        <a href="{% url 'show_home' %}" class="user-greeting">Hello {{ user.first_name }}!</a>
         {% else %}
           <a href="{% url 'login' %}">Login</a>
         {% endif %}

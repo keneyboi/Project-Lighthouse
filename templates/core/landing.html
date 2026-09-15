@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <!-- Link your extracted CSS file here -->
+  <link rel="stylesheet" href="{% static 'css/core/landing.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container">
+  <!-- Hero Wrapper -->
+  <section class="hero-wrapper">
+    <div class="hero-box">
+      <span class="hero-sub">PROJECT</span>
+      <h1 class="hero-main-title">LIGHTHOUSE</h1>
+      <div class="hero-morse">· — — · — · — — — · — — — · — — · — — · — —</div>
+      
+      <p class="hero-desc">
+        Find immediate safe havens near you—or register your business<br>
+        to become a sanctuary for those escaping abuse.
+      </p>
+
+      <div class="hero-btns">
+        <a href="" class="btn-action btn-white">Find a Safe Haven</a>
+        <a href="" class="btn-action btn-dark">Register Your Business</a>
+      </div>
+    </div>
+
+    <!-- Stats Section (Pinned to the bottom right of the hero banner) -->
+    <section class="stats-section">
+      <div class="stat-item">
+        <span class="stat-number">1,240+</span>
+        <span class="stat-label">SHELTERED USERS</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">450+</span>
+        <span class="stat-label">LIGHTHOUSES NATIONWIDE</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">CONFIDENTIAL</span>
+      </div>
+    </section>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <div class="carousel-track">
+      
+      <!-- Card 1 -->
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "I didn't know where to run at 2 AM. The map guided me to a 24-hour convenience store three blocks away. The staff knew exactly what to do and gave me a safe place to sit while calling support."
+        </p>
+        <span class="testimonial-author">— M. K., Quezon City (Safe Haven User)</span>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "Registering our 24/7 store as a Lighthouse took less than 10 minutes. Last month, our night shift team sheltered a young mother until local officers arrived. It gives our business real purpose."
+        </p>
+        <span class="testimonial-author">— Branch Manager, ExpressMart (Partner Establishment)</span>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "Having a quick escape button and discrete mapping gave me the courage to leave. I reached a verified pharmacy nearby, and the crew made sure I was safe until help arrived."
+        </p>
+        <span class="testimonial-author">— R. T., Cebu City (Safe Haven User)</span>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "As a gas station manager operating 24 hours, joining Lighthouse was a no-brainer. The specialized training provided to our staff helped us de-escalate a dangerous situation last week."
+        </p>
+        <span class="testimonial-author">— J. L., Davao City (Partner Establishment)</span>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "I was being followed late at night. Finding a nearby verified sanctuary cafe saved my life. The barista let me stay in the back office until family arrived."
+        </p>
+        <span class="testimonial-author">— A. S., Pasig City (Safe Haven User)</span>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          "Being able to turn our hotel lobby into a safe zone has made an active impact in our community. The platform interface is seamless and secure."
+        </p>
+        <span class="testimonial-author">— Operations Head, CityStay Hotel (Partner)</span>
+      </div>
+
+      <!-- DUPLICATE CARDS FOR SEAMLESS INFINITE LOOP -->
+      <div class="testimonial-card" aria-hidden="true">
+        <p class="testimonial-text">
+          "I didn't know where to run at 2 AM. The map guided me to a 24-hour convenience store three blocks away. The staff knew exactly what to do and gave me a safe place to sit while calling support."
+        </p>
+        <span class="testimonial-author">— M. K., Quezon City (Safe Haven User)</span>
+      </div>
+
+      <div class="testimonial-card" aria-hidden="true">
+        <p class="testimonial-text">
+          "Registering our 24/7 store as a Lighthouse took less than 10 minutes. Last month, our night shift team sheltered a young mother until local officers arrived. It gives our business real purpose."
+        </p>
+        <span class="testimonial-author">— Branch Manager, ExpressMart (Partner Establishment)</span>
+      </div>
+
+      <div class="testimonial-card" aria-hidden="true">
+        <p class="testimonial-text">
+          "Having a quick escape button and discrete mapping gave me the courage to leave. I reached a verified pharmacy nearby, and the crew made sure I was safe until help arrived."
+        </p>
+        <span class="testimonial-author">— R. T., Cebu City (Safe Haven User)</span>
+      </div>
+
+      <div class="testimonial-card" aria-hidden="true">
+        <p class="testimonial-text">
+          "As a gas station manager operating 24 hours, joining Lighthouse was a no-brainer. The specialized training provided to our staff helped us de-escalate a dangerous situation last week."
+        </p>
+        <span class="testimonial-author">— J. L., Davao City (Partner Establishment)</span>
+      </div>
+
+      <div class="testimonial-card" aria-hidden="true">
+        <p class="testimonial-text">
+          "I was being followed late at night. Finding a nearby verified sanctuary cafe saved my life. The barista let me stay in the back office until family arrived."
+        </p>
+        <span class="testimonial-author">— A. S., Pasig City (Safe Haven User)</span>
+      </div>
+
+      <div class="testimonial-card" aria-hidden="true">
+        <p class="testimonial-text">
+          "Being able to turn our hotel lobby into a safe zone has made an active impact in our community. The platform interface is seamless and secure."
+        </p>
+        <span class="testimonial-author">— Operations Head, CityStay Hotel (Partner)</span>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+
+{% endblock %}
