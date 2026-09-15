@@ -501,3 +501,513 @@ html, body {
   line-height: 1.6;
   margin: 0;
 }
+
+/* Landing HTML */
+/* --- HERO SECTION STYLING --- */
+
+  /* Local Hero Styles */
+  .hero-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    padding: 40px 12% 120px 12%; 
+    box-sizing: border-box;
+    width: 100%;
+    background-image: url('../images/home_background.png');
+    background-size: cover;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .hero-box {
+    max-width: 620px;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .hero-sub {
+    display: block;
+    font-family: 'Doto', monospace, sans-serif !important;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: 6px;
+    color: #cccccc !important;
+    margin-bottom: -5px;
+    text-transform: uppercase;
+  }
+
+  .hero-main-title {
+    font-family: 'Doto', monospace, sans-serif ;
+    font-weight: 600 ;
+    font-size: clamp(3rem, 6.5vw, 10rem) ;
+    letter-spacing: 4px;
+    color: #ffffff ;
+    margin: 0 ;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  .hero-morse {
+    font-family: 'Doto', monospace, sans-serif !important;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-align: center;
+    color: #888888 !important;
+    margin: 0 0 12px 0;
+  }
+
+  .hero-desc {
+    font-family: 'SF Pro Display', -apple-system, sans-serif !important;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #dddddd !important;
+    margin: 0 auto 32px auto;
+  }
+
+  .hero-btns {
+    display: flex !important;
+    gap: 16px !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .btn-action {
+    display: inline-block !important;
+    padding: 12px 28px !important;
+    border-radius: 24px !important;
+    font-family: 'SF Pro Display', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-white {
+    background-color: #ffffff !important;
+    color: #0d0d0d !important;
+    border: 1px solid #ffffff !important;
+  }
+
+  .btn-white:hover {
+    background-color: #ff9d42 !important;
+    border-color: #ff9d42 !important;
+    color: #ffffff !important;
+  }
+
+  .btn-dark {
+    background-color: rgba(20, 20, 20, 0.7) !important;
+    color: #ffffff !important;
+    border: 1px solid #666666 !important;
+  }
+
+  .btn-dark:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: #ffffff !important;
+  }
+
+  @media (max-width: 900px) {
+    .hero-wrapper {
+      justify-content: center !important;
+    }
+    .hero-btns {
+      flex-direction: column !important;
+    }
+    .btn-action {
+      width: 100% !important;
+    }
+  }
+
+ /* --- STATS SECTION (Pinned above bottom border/testimonials) --- */
+
+.stats-section {
+  position: absolute;
+  bottom: 24px; /* Positioned right above the testimonial border line */
+  right: 8%;    /* Aligned with the right edge of the hero box */
+  display: flex;
+  gap: 48px;
+  z-index: 5;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-family: 'Doto', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.stat-label {
+  display: block;
+  font-family: 'Doto', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  color: #a0a0a0;
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+
+
+/* --- INFINITE CAROUSEL TESTIMONIALS --- */
+
+.testimonials-section {
+  width: 100%;
+  overflow: hidden; /* Clips cards sliding past edges */
+  padding: 30px 0;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.4) 0%, rgba(10, 10, 10, 0.85) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+
+  /* Optional: Smooth fade effect on left & right edges */
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  width: max-content; /* Expands width to hold all cards in one line */
+  animation: marqueeScroll 50s linear infinite;
+}
+
+/* Pause scroll when user hovers over any card */
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
+/* Keyframe animation for infinite horizontal movement */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* Moves exactly half the track width for seamless loop */
+  }
+}
+
+.testimonial-card {
+  width: 360px;
+  min-width: 360px;
+  background-color: rgba(35, 35, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.testimonial-text {
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #cccccc;
+  margin: 0 0 16px 0;
+  text-align: left;
+}
+
+.testimonial-author {
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: right;
+  display: block;
+}
+
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+
+@media (max-width: 900px) {
+  .hero-wrapper {
+    align-items: center;
+    padding-bottom: 160px;
+  }
+
+  .stats-section {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .testimonials-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Parent wrapper to force side-by-side flex alignment */
+.dashboard-wrapper {
+  display: flex;
+  min-height: calc(100vh - 120px); /* Accounts for main navbar height */
+  width: 100%;
+  align-items: stretch;
+}
+
+.dashboard-sidebar {
+  width: 240px;
+  flex-shrink: 0; /* Prevents sidebar from collapsing */
+  background-color: #141414;
+  border-right: 1px solid #282828;
+  display: flex;
+  position: sticky;
+  flex-direction: column;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.sidebar-brand h2 {
+  font-family: 'Doto', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.user-badge {
+  font-size: 0.85rem;
+  color: #888888;
+}
+
+.sidebar-nav {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #cccccc;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #282828;
+  color: #ff9d42;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.logout-btn-sidebar {
+
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid #383838;
+  color: #ff5555;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  margin-top: auto;
+  width: 100%;
+}
+
+.logout-btn-sidebar:hover {
+  background-color: #ff5555;
+  border-color: #ff5555;
+  color: #ffffff;
+}
+
+.dashboard-main-content {
+  flex: 1;
+  min-width: 0; /* Prevents flex child grid items from overflowing screen width */
+  padding: 40px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* add location css */
+
+/* Container Layout */
+.location-form-card {
+  width: 100%;
+  background-color: #141414;
+  border: 1px solid #282828;
+  border-radius: 12px;
+  padding: 32px;
+  box-sizing: border-box;
+  margin-top: 24px;
+}
+
+.location-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Fields & Labels */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #888888;
+  text-transform: uppercase;
+}
+
+/* Targets all Django form inputs including textarea */
+.location-form input[type="text"],
+.location-form input[type="password"],
+.location-form input[type="email"],
+.location-form textarea,
+.location-form select {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #0d0d0d;
+  border: 1px solid #282828;
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.location-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.location-form input:focus,
+.location-form textarea:focus {
+  outline: none;
+  border-color: #ff9d42;
+  box-shadow: 0 0 0 2px rgba(255, 157, 66, 0.15);
+}
+
+.form-error {
+  color: #ff5555;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Matching Action Buttons */
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #ff9d42;
+  border: 1px solid #ff9d42;
+  color: #0d0d0d;
+}
+
+.btn-primary:hover {
+  background-color: #e08833;
+  border-color: #e08833;
+}
+
+.btn-secondary {
+  background-color: #282828;
+  border: 1px solid #383838;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background-color: #333333;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+.protocol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.protocol-card {
+  background-color: #141414;
+  border: 1px solid #282828;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.protocol-card:hover {
+  border-color: #383838;
+}
+
+.protocol-title {
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.protocol-desc {
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #cccccc;
+  margin: 0;
+}

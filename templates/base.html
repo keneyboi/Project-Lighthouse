@@ -26,15 +26,20 @@
   <nav class="navbar">
     <div class="nav-brand">
       <span class="logo-text">PROJECT LIGHTHOUSE</span>
-      <span class="logo-divider">· — — · — · — — — · — — — · — — · — — · — —</span>
+      <!-- <span class="logo-divider">· — — · — · — — — · — — — · — — · — — · — —</span> -->
     </div>
 
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
+      <li><a href="#safe-havens">Safe Havens</a></li>
       <li><a href="#how-it-works">How It Works</a></li>
-      <li><a href="#get-help">Get Help</a></li>
-      <li><a href="{% url 'login' %}">Login</a></li>
+      <li>
+        {% if user.is_authenticated %}
+        <span class="user-greeting">Hello {{ user.first_name }}!</span>
+        {% else %}
+          <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+      </li>
     </ul>
 
     <a href="https://www.google.com" class="quick-exit-btn">Quick Exit (ESC)</a>

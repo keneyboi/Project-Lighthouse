@@ -1,0 +1,31 @@
+{% extends 'dashboard_base.html' %}
+
+{% block dashboard_content %}
+<header class="dashboard-header">
+  <div>
+    <h1 class="dashboard-title">ADD NEW SAFE HAVEN</h1>
+    <p class="dashboard-subtitle">Register a physical establishment branch to house victims in emergency situations.</p>
+  </div>
+</header>
+
+<div class="location-form-card">
+  <form method="POST" action="{% url 'add_location' %}" class="location-form">
+    {% csrf_token %}
+    
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <span class="form-error">{{ field.errors.0 }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Save Location</button>
+      <a href="{% url 'show_home' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
