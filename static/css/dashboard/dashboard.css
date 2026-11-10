@@ -3,14 +3,28 @@
    ========================================================================== */
 
 /* Full viewport layout ensuring sticky sidebars and scrollable main content */
+
+.dashboard-main {
+      background-image: 
+      linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%), 
+      url('../../images/lighthouse_bg.png'); /* Replace with your actual image path */
+      background-size: cover;
+      background-position: center;
+
+      overflow: hidden;
+      margin-bottom: 32px;
+      position: relative;
+      border: 1px solid #1f1f1f;
+}
+
 .dashboard-body {
-    background-color: #000000;
     color: #ffffff;
     font-family: 'SF Pro Display', -apple-system, sans-serif;
     margin: 0;
     padding: 0;
     height: 100vh;
     overflow: hidden; /* Prevent body scroll, handle inside wrapper */
+
 }
 
 .dashboard-wrapper {
