@@ -1,313 +1,243 @@
 /* ==========================================================================
-   Project Lighthouse — Safe Haven Control Panel (home.css)
-   Token Baseline: Editorial Noir & Trauma-Informed Discrete Status Hierarchy
+   Dashboard Base Layout
    ========================================================================== */
 
-:root {
-  /* Lantern Beacon Accent — Reserved for verification cues & active state */
-  --accent-beacon: #ff9d42;
-  --accent-beacon-soft: rgba(255, 157, 66, 0.12);
-  --status-safe: #4ade80;
+/* Full viewport layout ensuring sticky sidebars and scrollable main content */
+.dashboard-body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'SF Pro Display', -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden; /* Prevent body scroll, handle inside wrapper */
 }
 
-/* --- Header Typography --- */
-.view-header {
-  margin-bottom: 40px;
-}
-
-.hero-title {
-  font-family: var(--font-serif);
-  font-size: 3.2rem;
-  line-height: 1.0;
-  letter-spacing: -0.02em;
-  font-weight: 400;
-  color: var(--text-primary);
-  margin: 0 0 10px 0;
-  text-transform: lowercase;
-}
-
-.subtitle {
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* --- Operational Metrics Grid --- */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-bottom: 48px;
-}
-
-.metric-card {
-  background-color: var(--surface-card);
-  border: 1px solid var(--border-subdued);
-  border-radius: 12px;
-  padding: 28px 32px;
-  transition: border-color 0.2s ease;
-}
-
-.metric-card:hover {
-  border-color: var(--border-active);
-}
-
-.metric-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  margin: 0 0 12px 0;
-  text-transform: uppercase;
-}
-
-.metric-value {
-  font-size: 3.2rem;
-  line-height: 1;
-  font-weight: 400;
-  color: var(--text-primary);
-}
-
-/* --- Section Dividers & Headers --- */
-.dashboard-section {
-  margin-top: 48px;
-}
-
-.section-header-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-subdued);
-}
-
-.section-title {
-  font-family: var(--font-serif);
-  font-size: 2rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-/* --- Managed Locations Stack --- */
-.locations-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.location-card {
-  background-color: var(--surface-card);
-  border: 1px solid var(--border-subdued);
-  border-radius: 12px;
-  padding: 24px 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: border-color 0.2s ease, opacity 0.2s ease;
-}
-
-.location-card:not(.is-active) {
-  opacity: 0.55;
-}
-
-.location-card:hover {
-  border-color: var(--border-active);
-}
-
-.location-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.location-name {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 6px 0;
-}
-
-.location-address {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin: 0 0 10px 0;
-}
-
-.location-phrase {
-  font-size: 0.88rem;
-  margin: 0;
-}
-
-.phrase-highlight {
-  font-family: var(--font-serif);
-  font-style: italic;
-  color: var(--accent-beacon);
-  letter-spacing: 0.02em;
-}
-
-.location-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-}
-
-.is-active .status-badge {
-  color: var(--status-safe);
-}
-
-.status-indicator {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--text-muted);
-}
-
-.safe-active {
-  background-color: var(--status-safe);
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
-}
-
-.intervention-count {
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  margin: 6px 0 14px 0;
-}
-
-/* --- Protocol Checklist Cards --- */
-.protocol-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.protocol-card {
-  background-color: var(--surface-card);
-  border: 1px dashed var(--border-subdued);
-  padding: 24px;
-  border-radius: 12px;
-  transition: border-color 0.2s ease;
-}
-
-.protocol-card:hover {
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.protocol-title {
-  font-size: 1.35rem;
-  font-weight: 400;
-  color: var(--text-primary);
-  margin: 0 0 8px 0;
-}
-
-.protocol-desc {
-  font-size: 0.88rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.empty-state-card {
-  background-color: transparent;
-  border: 1px dashed var(--border-subdued);
-  padding: 36px 24px;
-  text-align: center;
-  border-radius: 12px;
-}
-
-/* --- Stark Bone-White Buttons (Per Design System) --- */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--text-primary);
-  color: var(--canvas-void);
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 13.5px;
-  padding: 10px 20px;
-  border-radius: 6px;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--surface-input);
-  color: var(--text-primary);
-  border: 1px solid var(--border-subdued);
-  font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 13px;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background-color: var(--surface-elevated);
-  border-color: var(--border-active);
-}
-
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 11.5px;
-}
-
-/* --- Shared Utility Helpers --- */
-.font-mono { font-family: var(--font-mono); }
-.editorial-title { font-family: var(--font-serif); }
-.text-secondary { color: var(--text-secondary); }
-.text-muted { color: var(--text-muted); }
-
-/* --- Mobile Breakpoints (< 640px) --- */
-@media (max-width: 640px) {
-  .hero-title {
-    font-size: 2.4rem;
-  }
-
-  .metrics-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .section-header-flex {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .location-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .location-actions {
-    align-items: flex-start;
-    text-align: left;
+.dashboard-wrapper {
+    display: flex;
+    height: 100vh;
     width: 100%;
-    padding-top: 14px;
-    border-top: 1px solid var(--border-subdued);
-  }
+    position: relative;
+    transition: grid-template-columns 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar Components (Shrink-to-Icon Layout)
+   -------------------------------------------------------------------------- */
+.dashboard-sidebar {
+    width: 280px;
+    background-color: #0a0a0a;
+    border-right: 1px solid #1f1f1f;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    flex-shrink: 0;
+    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); /* Animate width instead of transform */
+    position: relative;
+    z-index: 50;
+    overflow: hidden; /* Crucial: hides text when shrinking */
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 1.5rem;
+    height: 90px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand {
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.sidebar-brand .editorial-title {
+    font-family: 'Serif-regular', serif;
+    font-size: 2.2rem;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+    line-height: 1;
+}
+
+/* New Inline Toggle Button Styling */
+.sidebar-toggle-btn {
+    background: transparent;
+    border: none;
+    color: #888888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    flex-shrink: 0;
+}
+
+.sidebar-toggle-btn:hover {
+    color: #ffffff;
+    background: rgba(255,255,255,0.1);
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Nav Link Alignment */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    color: #888888;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'SF Pro Display', sans-serif;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Prevents text from dropping to next line during shrink */
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* The Active State (mimicking the reference image) */
+.sidebar-link.active {
+    color: #000000;
+    background-color: #ffffff; /* Or change to your brand color, e.g., #ff9d42 */
+}
+
+.nav-icon {
+    flex-shrink: 0; /* Prevents the SVG from squishing */
+}
+
+.sidebar-footer {
+    padding: 1.5rem 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-ghost {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 14px 16px;
+    background-color: transparent;
+    border: 1px solid #333333;
+    color: #cccccc;
+    font-family: 'SF Pro Display', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-ghost:hover {
+    background-color: #7a1c1c;
+    border-color: #7a1c1c;
+    color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   COLLAPSED STATE LOGIC
+   -------------------------------------------------------------------------- */
+.dashboard-wrapper.sidebar-collapsed .dashboard-sidebar {
+    width: 80px; /* Shrinks the sidebar instead of translating it */
+}
+
+/* Completely remove text from the document flow for perfect centering */
+.dashboard-wrapper.sidebar-collapsed .sidebar-brand,
+.dashboard-wrapper.sidebar-collapsed .link-text {
+    display: none; 
+}
+
+/* Re-center header and remove the gap between the hidden logo and toggle button */
+.dashboard-wrapper.sidebar-collapsed .sidebar-header {
+    justify-content: center;
+    padding: 2rem 0;
+    gap: 0;
+}
+
+/* Re-center icons and remove flex gap so they sit dead center */
+.dashboard-wrapper.sidebar-collapsed .sidebar-link,
+.dashboard-wrapper.sidebar-collapsed .btn-ghost {
+    justify-content: center;
+    padding: 14px 0;
+    gap: 0; 
+}
+
+.dashboard-wrapper.sidebar-collapsed .btn-ghost {
+    border-color: transparent; /* Makes logout button look cleaner when small */
+}
+
+.dashboard-wrapper.sidebar-collapsed .btn-ghost:hover {
+    background-color: #7a1c1c;
+}
+
+/* Toggle Button Icon Swap */
+.toggle-icon-open { display: block; }
+.toggle-icon-close { display: none; }
+
+.dashboard-wrapper.sidebar-collapsed .toggle-icon-open { display: none; }
+.dashboard-wrapper.sidebar-collapsed .toggle-icon-close { display: block; }
+
+/* --------------------------------------------------------------------------
+   Main Content Area & Mobile Overrides
+   -------------------------------------------------------------------------- */
+.dashboard-main {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    background-color: #050505;
+}
+
+.dashboard-content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-content-container { padding: 3rem 2rem; }
+}
+
+@media (max-width: 768px) {
+    /* On mobile, revert back to slide-out behavior instead of shrinking */
+    .dashboard-sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        width: 280px !important; /* Force full width on mobile */
+    }
+
+    .dashboard-wrapper:not(.sidebar-collapsed) .dashboard-sidebar {
+        transform: translateX(0);
+    }
+    
+    .dashboard-wrapper:not(.sidebar-collapsed)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(4px);
+        z-index: 40;
+    }
 }
