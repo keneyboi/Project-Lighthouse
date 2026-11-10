@@ -1,35 +1,51 @@
 {% extends 'dashboard_base.html' %}
+
 {% load static %}
+
 {% block extra_css %}
-  <!-- Link your extracted CSS file here -->
+  <!-- Make sure to block name matches the base template (dashboard_css) -->
   <link rel="stylesheet" href="{% static 'css/user_settings/user_settings.css' %}">
 {% endblock %}
+
 {% block dashboard_content %}
-<header class="dashboard-header">
-  <div>
-    <h1 class="dashboard-title">SETTINGS</h1>
-  </div>
+<header class="settings-header">
+  <h1 class="editorial-title">Settings</h1>
+  <p class="dashboard-subtitle">Manage emergency protocols and active safe haven locations.</p>
 </header>
 
-<div style="display: flex; flex-direction: column; gap: 24px;">
+<div class="settings-cards-container">
+
   <!-- Protocol Checklist Management -->
   <div class="location-form-card">
-    <h3 class="panel-title" style="margin-bottom: 16px;">Emergency Protocol Checklist</h3>
-
+    <div class="card-header-with-icon">
+      <div class="icon-wrapper">
+        <svg class="panel-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"></polyline>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="panel-title">Emergency Protocol Checklist</h3>
+      </div>
+    </div>
 
     <!-- Add New Protocol -->
-    <form method="POST" action="{% url 'settings' %}" class="location-form" style="margin-bottom: 24px;">
+    <form method="POST" action="{% url 'settings' %}" class="location-form add-protocol-form">
       {% csrf_token %}
       <input type="hidden" name="action_type" value="add_protocol">
       
-      <div class="form-group">
-        <label for="title" class="form-label"></label>
-        <input type="text" id="title" name="title" placeholder="Protocol Step Title" required>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="title" class="form-label">Protocol Step Title</label>
+          <input type="text" id="title" name="title" placeholder="e.g. Guard Gate Verification" required>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="description" class="form-label">Staff Action Details</label>
-        <textarea id="description" name="description" placeholder="Specify instructions for your personnel..." required></textarea>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="description" class="form-label">Staff Action Details</label>
+          <textarea id="description" name="description" placeholder="Specify instructions for your personnel..." required></textarea>
+        </div>
       </div>
 
       <div class="form-actions">
@@ -38,48 +54,65 @@
     </form>
 
     <!-- Existing Protocols List -->
-    <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #282828; padding-top: 20px;">
-      {% for item in protocols %}
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; background-color: #0d0d0d; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
-          <div>
-            <h4 style="font-size: 14px; color: #ffffff; margin: 0 0 4px 0;">{{ item.title }}</h4>
-            <p style="font-size: 13px; color: #aaaaaa; margin: 0;">{{ item.description }}</p>
+    <div class="protocols-list-section">
+      <h4 class="section-subhead">Active Protocols</h4>
+      <div class="list-container">
+        {% for item in protocols %}
+          <div class="list-item-card">
+            <div class="item-details">
+              <h4 class="item-title">{{ item.title }}</h4>
+              <p class="item-desc">{{ item.description }}</p>
+            </div>
+            <form method="POST" action="{% url 'settings' %}" class="inline-delete-form">
+              {% csrf_token %}
+              <input type="hidden" name="action_type" value="delete_protocol">
+              <input type="hidden" name="protocol_id" value="{{ item.id }}">
+              <button type="submit" class="btn-text-danger">Remove</button>
+            </form>
           </div>
-          <form method="POST" action="{% url 'settings' %}">
-            {% csrf_token %}
-            <input type="hidden" name="action_type" value="delete_protocol">
-            <input type="hidden" name="protocol_id" value="{{ item.id }}">
-            <button type="submit" style="background: none; border: none; color: #ff5555; cursor: pointer; font-size: 13px; font-weight: 600;">Remove</button>
-          </form>
-        </div>
-      {% empty %}
-        <p class="dash-card-desc">No custom protocols added yet.</p>
-      {% endfor %}
+        {% empty %}
+          <div class="empty-state">
+            <p class="dash-card-desc">No custom protocols added yet.</p>
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 
   <!-- Location Management & Danger Zone -->
-  <div class="location-form-card">
-    <h3 class="panel-title" style="margin-bottom: 6px;">Manage Locations</h3>
-    <p class="dash-card-desc" style="margin-bottom: 20px;">Remove inactive branches or physical safe haven entries.</p>
+  <div class="location-form-card danger-zone-card">
+    <div class="card-header-with-icon">
+      <div class="icon-wrapper icon-danger">
+        <svg class="panel-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
+      <div>
+        <h3 class="panel-title">Manage Locations</h3>
+        <p class="dash-card-desc">Remove inactive branches or physical safe haven entries.</p>
+      </div>
+    </div>
 
-    <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div class="list-container location-list">
       {% for location in locations %}
-        <div style="display: flex; justify-content: space-between; align-items: center; background-color: #0d0d0d; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
-          <div>
-            <h4 style="font-size: 15px; color: #ffffff; margin: 0 0 4px 0;">{{ location.name }}</h4>
-            <p style="font-size: 13px; color: #888888; margin: 0;">{{ location.address }}</p>
+        <div class="list-item-card">
+          <div class="item-details">
+            <h4 class="item-title">{{ location.name }}</h4>
+            <p class="item-desc">{{ location.address }}</p>
           </div>
           
-          <form method="POST" action="{% url 'settings' %}" onsubmit="return confirm('Are you sure you want to delete this safe haven location? This action cannot be undone.');">
+          <form method="POST" action="{% url 'settings' %}" class="inline-delete-form" onsubmit="return confirm('Are you sure you want to delete this safe haven location? This action cannot be undone.');">
             {% csrf_token %}
             <input type="hidden" name="action_type" value="delete_location">
             <input type="hidden" name="location_id" value="{{ location.id }}">
-            <button type="submit" class="logout-btn-sidebar" style="width: auto; padding: 8px 16px;">Delete Location</button>
+            <button type="submit" class="btn-outline-danger">Delete Location</button>
           </form>
         </div>
       {% empty %}
-        <p class="dash-card-desc">No locations registered to manage.</p>
+        <div class="empty-state">
+          <p class="dash-card-desc">No locations registered to manage.</p>
+        </div>
       {% endfor %}
     </div>
   </div>
