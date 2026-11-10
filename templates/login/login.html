@@ -1,27 +1,43 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login | Project Lighthouse{% endblock %}
 
-{% load static %}
-
 {% block extra_css %}
-  <!-- Link your extracted CSS file here -->
+  <link rel="stylesheet" href="{% static 'css/common/auth_layout.css' %}">
   <link rel="stylesheet" href="{% static 'css/login/login.css' %}">
 {% endblock %}
 
-
 {% block content %}
 <main class="auth-container">
+  <!-- Vignette gradient layer that darkens near the card and fades clear outwards -->
+  <div class="auth-vignette-overlay" aria-hidden="true"></div>
+
+  <!-- Left Postcard Stack -->
+  <div class="postcard-stack left-stack">
+    <!-- Back card (Lighthouse beacon) -->
+    <div class="postcard-frame card-back">
+      <img src="{% static 'images/left-image.webp' %}" alt="Lighthouse beacon" class="postcard-img">
+    </div>
+    <!-- Front overlapping card (Pixel/Animated beacon) -->
+    <div class="postcard-frame card-front">
+      <img src="{% static 'images/lighthouse-8bit.gif' %}" alt="Sanctuary signal" class="postcard-img">
+    </div>
+  </div>
+
+  <!-- Central Login Component -->
   <div class="auth-card">
-    <h2 class="auth-title">LOGIN</h2>
-    <p class="auth-subtitle">Access your Project Lighthouse dashboard</p>
+    <div class="auth-header">
+      <h1 class="auth-title">Login</h1>
+      <p class="auth-subtitle">Sign in to coordinate safe havens or manage dispatch protocols.</p>
+    </div>
     
-    <form method="POST" class="auth-form">
+    <form method="POST" class="auth-form" novalidate>
       {% csrf_token %}
 
       {% for field in form %}
-        <p>
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="auth-field-group">
+          <label for="{{ field.id_for_label }}">{{ field.label|lower }}</label>
           {{ field }}
 
           {% if field.errors %}
@@ -29,34 +45,47 @@
               <div class="error-wrapper-content">
                 <div class="auth-error-container">
                   {% for error in field.errors %}
-                    <p class="auth-error-text">{{ error }}</p>
+                    <span class="auth-error-text">{{ error }}</span>
                   {% endfor %}
                 </div>
               </div>
             </div>
           {% endif %}
-        </p>
+        </div>
       {% endfor %}
 
-      <!-- Error message positioned at the bottom before the submit button -->
       {% if form.non_field_errors %}
         <div class="error-wrapper show">
           <div class="error-wrapper-content">
             <div class="auth-error-container">
               {% for error in form.non_field_errors %}
-                <p class="auth-error-text">{{ error }}</p>
+                <span class="auth-error-text">{{ error }}</span>
               {% endfor %}
             </div>
           </div>
         </div>
       {% endif %}
 
-      <button type="submit" class="auth-btn">Login</button>
+      <button type="submit" class="auth-btn">Authenticate</button>
     </form>
 
-    <p class="auth-footer">
-      Don't have an account? <a href="{% url 'register' %}" class="auth-link">Register here</a>
-    </p>
+    <div class="auth-footer-meta">
+      <p class="auth-footer">
+        Be a safe sanctuary registration? <a href="{% url 'register' %}" class="auth-link">Register a Safe Haven &rarr;</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Right Postcard Stack -->
+  <div class="postcard-stack right-stack">
+    <!-- Back card (Shoreline / Distant beacon) -->
+    <div class="postcard-frame card-back">
+      <img src="{% static 'images/right-image.gif' %}" alt="Distant haven beacon" class="postcard-img">
+    </div>
+    <!-- Front overlapping card (Solidarity / Help) -->
+    <div class="postcard-frame card-front">
+      <img src="{% static 'images/help.webp' %}" alt="Community solidarity" class="postcard-img">
+    </div>
   </div>
 </main>
 {% endblock %}

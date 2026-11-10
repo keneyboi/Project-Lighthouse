@@ -1,90 +1,357 @@
-/* --- DASHBOARD ANALYTICS GRID & CARDS --- */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
+/* ==========================================================================
+   Project Lighthouse — Safe Haven Control Panel (home.css)
+   Token Baseline: Editorial Noir & Trauma-Informed Discrete Hierarchy
+   ========================================================================== */
+
+:root {
+  /* Surface Tokens */
+  --canvas-void: #000000;
+  --surface-card: #0b0b0b;
+  --surface-input: #141414;
+  --surface-elevated: #212121;
+
+  /* Border Tokens */
+  --border-subdued: #1c1c1c;
+  --border-active: rgba(255, 255, 255, 0.35);
+
+  /* Typography Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --text-muted: #555555;
+
+  /* Typography Families */
+  --font-serif: 'Serif-regular', Georgia, serif;
+  --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Doto', monospace;
+
+  /* Accents */
+  --accent-beacon: #ff9d42;
+  --accent-beacon-soft: rgba(255, 157, 66, 0.12);
+  --status-safe: #4ade80;
 }
 
-.dash-card {
-  background-color: #141414;
-  border: 1px solid #282828;
-  border-radius: 12px;
-  padding: 24px;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+/* --- Base Text Utilities --- */
+.font-mono { font-family: var(--font-mono), monospace !important; }
+.editorial-title { font-family: var(--font-serif), serif !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+/* --- Header Typography --- */
+.view-header {
+  margin-bottom: 36px;
 }
 
-.dash-card:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-  border-color: #383838;
+.hero-title {
+  font-family: var(--font-serif), serif;
+  font-size: 3.2rem;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 10px 0;
+  text-transform: lowercase;
 }
 
-.dash-card-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #888888;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.dash-card-value {
-  font-family: 'Doto', sans-serif;
-  font-weight: 700;
-  font-size: 28px;
-  color: #ffffff;
-  margin: 12px 0 6px 0;
-}
-
-.dash-card-desc {
-  font-size: 12px;
-  color: #666666;
+.subtitle {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
   margin: 0;
 }
 
-.main-panel {
-  margin-top: 12px;
+/* --- Operational Metrics Grid --- */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 44px;
 }
 
-/* --- EMERGENCY PROTOCOL CARDS --- */
+.metric-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subdued);
+  border-radius: 12px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: border-color 0.2s ease;
+}
+
+.metric-card:hover {
+  border-color: var(--border-active);
+}
+
+.metric-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+}
+
+.metric-value {
+  font-family: var(--font-mono), monospace;
+  font-size: 3.2rem;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+/* --- Section Dividers & Headers --- */
+.dashboard-section {
+  margin-top: 48px;
+}
+
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subdued);
+}
+
+.section-title {
+  font-family: var(--font-serif), serif;
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* --- Managed Locations Stack --- */
+.locations-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.location-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subdued);
+  border-radius: 12px;
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.location-card:not(.is-active) {
+  opacity: 0.55;
+}
+
+.location-card:hover {
+  border-color: var(--border-active);
+}
+
+.location-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.location-name {
+  font-family: var(--font-mono), monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+}
+
+.location-address {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 10px 0;
+}
+
+.location-phrase {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.phrase-highlight {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  color: var(--accent-beacon);
+  letter-spacing: 0.02em;
+}
+
+.location-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.location-card.is-active .status-badge {
+  color: var(--status-safe);
+}
+
+.status-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--text-muted);
+}
+
+.safe-active {
+  background-color: var(--status-safe);
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+}
+
+.intervention-count {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  margin: 6px 0 14px 0;
+}
+
+/* --- Protocol Checklist Cards --- */
 .protocol-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
   margin-top: 16px;
-  width: 100%;
 }
 
 .protocol-card {
-  background-color: #141414;
-  border: 1px solid #282828;
-  border-radius: 8px;
-  padding: 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  background-color: var(--surface-card);
+  border: 1px dashed var(--border-subdued);
+  padding: 24px;
+  border-radius: 12px;
   transition: border-color 0.2s ease;
 }
 
 .protocol-card:hover {
-  border-color: #383838;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .protocol-title {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin: 0;
-  letter-spacing: 0.3px;
+  font-family: var(--font-serif), serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
 }
 
 .protocol-desc {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 14px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
   line-height: 1.5;
-  color: #cccccc;
   margin: 0;
+}
+
+.empty-state-card {
+  background-color: transparent;
+  border: 1px dashed var(--border-subdued);
+  padding: 36px 24px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.empty-state-card p {
+  color: var(--text-secondary);
+  font-family: var(--font-sans), sans-serif;
+  margin: 0;
+}
+
+/* --- Buttons (Stark Bone-White Primary, Slate Secondary) --- */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--text-primary) !important;
+  color: var(--canvas-void) !important;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.88;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subdued);
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--surface-elevated);
+  border-color: var(--border-active);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 11.5px;
+}
+
+/* --- Mobile Breakpoints (< 640px) --- */
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2.4rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .section-header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .location-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .location-actions {
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-subdued);
+  }
 }

@@ -1,52 +1,163 @@
 {% extends 'base.html' %}
-
-{% block title %}Register | Project Lighthouse{% endblock %}
 {% load static %}
+
+{% block title %}Register Sanctuary | Project Lighthouse{% endblock %}
+
 {% block extra_css %}
-  <!-- Link your extracted CSS file here -->
+  <link rel="stylesheet" href="{% static 'css/common/auth_layout.css' %}">
   <link rel="stylesheet" href="{% static 'css/register/register.css' %}">
 {% endblock %}
 
 {% block content %}
 <main class="auth-container">
-  <div class="auth-card">
-    <h2 class="auth-title">REGISTER</h2>
-    <p class="auth-subtitle">Create an account for Project Lighthouse</p>
+  <!-- Vignette gradient layer that darkens near the card and fades clear outwards -->
+  <div class="auth-vignette-overlay" aria-hidden="true"></div>
+
+  <!-- Left Postcard Stack -->
+  <div class="postcard-stack left-stack">
+    <!-- Back card (Lighthouse) -->
+    <div class="postcard-frame card-back">
+      <img src="{% static 'images/left-image.webp' %}" alt="Lighthouse beacon" class="postcard-img">
+    </div>
+    <!-- Front overlapping card (Hands / Haven connection) -->
+    <div class="postcard-frame card-front">
+      <img src="{% static 'images/lighthouse-8bit.gif' %}" alt="Connected hands" class="postcard-img">
+    </div>
+  </div>
+
+  <!-- Central Registration Component -->
+  <div class="auth-card register-wide">
+    <div class="auth-header">
+      <h1 class="auth-title">Register</h1>
+      <p class="auth-subtitle">Join the trusted network to host or coordinate verified safe havens.</p>
+    </div>
     
-    <form method="POST" class="auth-form">
+    <form method="POST" class="auth-form" novalidate>
       {% csrf_token %}
 
-      {% for field in form %}
-        <p>
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          
-      
-          {% if field.errors %}
-            <div class="auth-error-container">
-              {% for error in field.errors %}
-                <p class="auth-error-text">{{ error }}</p>
-              {% endfor %}
+      <!-- Row 1: First Name & Last Name -->
+      <div class="auth-grid-row">
+        <div class="auth-field-group">
+          <label for="{{ form.first_name.id_for_label }}">first name</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}
+            <div class="error-wrapper show">
+              <div class="error-wrapper-content">
+                {% for error in form.first_name.errors %}
+                  <span class="auth-error-text">{{ error }}</span>
+                {% endfor %}
+              </div>
             </div>
           {% endif %}
-        </p>
-      {% endfor %}
+        </div>
 
+        <div class="auth-field-group">
+          <label for="{{ form.last_name.id_for_label }}">last name</label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}
+            <div class="error-wrapper show">
+              <div class="error-wrapper-content">
+                {% for error in form.last_name.errors %}
+                  <span class="auth-error-text">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Single Line: Username -->
+      <div class="auth-field-group">
+        <label for="{{ form.username.id_for_label }}">username</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="error-wrapper show">
+            <div class="error-wrapper-content">
+              {% for error in form.username.errors %}
+                <span class="auth-error-text">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Single Line: Email -->
+      <div class="auth-field-group">
+        <label for="{{ form.email.id_for_label }}">email</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <div class="error-wrapper show">
+            <div class="error-wrapper-content">
+              {% for error in form.email.errors %}
+                <span class="auth-error-text">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Single Line: Password -->
+      <div class="auth-field-group">
+        <label for="{{ form.password1.id_for_label }}">password</label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}
+          <div class="error-wrapper show">
+            <div class="error-wrapper-content">
+              {% for error in form.password1.errors %}
+                <span class="auth-error-text">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Single Line: Password Confirmation -->
+      <div class="auth-field-group">
+        <label for="{{ form.password2.id_for_label }}">password confirmation</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+          <div class="error-wrapper show">
+            <div class="error-wrapper-content">
+              {% for error in form.password2.errors %}
+                <span class="auth-error-text">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
 
       {% if form.non_field_errors %}
-        <div class="auth-error-container">
-          {% for error in form.non_field_errors %}
-            <p class="auth-error-text">{{ error }}</p>
-          {% endfor %}
+        <div class="error-wrapper show">
+          <div class="error-wrapper-content">
+            <div class="auth-error-container">
+              {% for error in form.non_field_errors %}
+                <span class="auth-error-text">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
         </div>
       {% endif %}
 
-      <button type="submit" class="auth-btn">Register Account</button>
+      <button type="submit" class="auth-btn">Register Sanctuary</button>
     </form>
-    
-    <p class="auth-footer">
-      Already have an account? <a href="{% url 'login' %}" class="auth-link">Login here</a>
-    </p>
+
+    <div class="auth-footer-meta">
+      <p class="auth-footer">
+        Already registered in the network? <a href="{% url 'login' %}" class="auth-link">Login here &rarr;</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Right Postcard Stack -->
+  <div class="postcard-stack right-stack">
+    <!-- Back card (Shoreline / Distant Lighthouse) -->
+    <div class="postcard-frame card-back">
+      <img src="{% static 'images/right-image.gif' %}" alt="Distant haven beacon" class="postcard-img">
+    </div>
+    <!-- Front overlapping card (Holding hands pledge) -->
+    <div class="postcard-frame card-front">
+      <img src="{% static 'images/help.webp' %}" alt="Community solidarity" class="postcard-img">
+    </div>
   </div>
 </main>
 {% endblock %}

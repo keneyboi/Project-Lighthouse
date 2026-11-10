@@ -1,103 +1,86 @@
 {% extends 'dashboard_base.html' %}
 {% load static %}
 
-{% block extra_css %}
-  <!-- Link your extracted CSS file here -->
+{% block dashboard_css %}
   <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
 {% endblock %}
 
 {% block dashboard_content %}
-<header class="dashboard-header">
-  <div>
-    <h1 class="dashboard-title">SAFE HAVEN CONTROL PANEL</h1>
-    <p class="dashboard-subtitle">Let's help more people, <strong>{{ user.first_name }}</strong>!</p>
-  </div>
+<header class="view-header">
+  <h1 class="hero-title">safe haven control</h1>
+  <p class="subtitle text-secondary">Operational overview for {{ user.first_name }}</p>
 </header>
 
-<!-- Top Operational Analytics -->
-<section class="dashboard-grid">
-
-  <div class="dash-card">
-    <div class="dash-card-value">
-      {{ total_havens_count }}
-    </div>
-    <p class="dash-card-label">TOTAL SAFE HAVENS</p>
-
+<!-- Operational Analytics Grid -->
+<section class="metrics-grid">
+  <div class="metric-card">
+    <p class="metric-label text-secondary">TOTAL SAFE HAVENS</p>
+    <div class="metric-value font-mono">{{ total_havens_count|default:"0" }}</div>
   </div>
-
-  <div class="dash-card">
-    <div class="dash-card-value">
-      {{ total_people_helped }}
-    </div>
-    <p class="dash-card-label">TOTAL PEOPLE HELPED</p>
+  <div class="metric-card">
+    <p class="metric-label text-secondary">TOTAL PEOPLE HELPED</p>
+    <div class="metric-value font-mono">{{ total_people_helped|default:"0" }}</div>
   </div>
-
 </section>
 
 <!-- Locations Inventory -->
-<section class="main-panel" style="margin-top: 40px;">
-  <h2 class="panel-title" style="margin-bottom: 16px;">MANAGED LOCATIONS</h2>
+<section class="dashboard-section">
+  <div class="section-header-flex">
+    <h2 class="section-title">Managed Locations</h2>
+    <a href="{% url 'add_location' %}" class="btn-primary">Create Safe Haven</a>
+  </div>
   
-  <div class="locations-list" style="display: flex; flex-direction: column; gap: 16px;">
+  <div class="locations-stack">
     {% for haven in user_havens %}
-      <div class="dash-card" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          {% if haven.is_active %}
-            <h3 style="font-family: 'Doto', sans-serif; font-weight: 700; font-size: 18px; color: #ffffff; margin: 0 0 4px 0;">{{ haven.name }}</h3>
-            <p style="color: #888888; font-size: 13px; margin: 0 0 8px 0;">{{ haven.address }}</p>
-            <p style="font-size: 13px; color: #cccccc; margin: 0;">Key Phrase: <strong style="color: #fdfdfd;">"{{ haven.safe_phrase }}"</strong></p>
-          {% else %}
-            <h3 style="font-family: 'Doto', sans-serif; font-weight: 700; font-size: 18px; color: #474747; margin: 0 0 4px 0;">{{ haven.name }}</h3>
-            <p style="color: #474747; font-size: 13px; margin: 0 0 8px 0;">{{ haven.address }}</p>
-            <p style="font-size: 13px; color: #474747; margin: 0;">Key Phrase: <strong style="color: #474747;">"{{ haven.safe_phrase }}"</strong></p>
-          {% endif %}
+      <div class="location-card {% if haven.is_active %}is-active{% endif %}">
+        <div class="location-info">
+          <h3 class="location-name font-mono">{{ haven.name }}</h3>
+          <p class="location-address text-secondary">{{ haven.address }}</p>
+          <p class="location-phrase text-secondary">
+            Verification Phrase: <span class="phrase-highlight">"{{ haven.safe_phrase }}"</span>
+          </p>
         </div>
-        <div style="text-align: right;">
-          {% if haven.is_active %}
-            <span style="color: #d18e30; font-weight: 700; font-size: 12px; letter-spacing: 1px;">ACTIVE</span>
-          {% else %}
-            <span style="color: #abaaaa; font-weight: 700; font-size: 12px; letter-spacing: 1px;">INACTIVE</span>
-          {% endif %}
-          <p style="font-size: 12px; color: #666666; margin: 6px 0 12px 0;">Interventions: {{ haven.people_helped }}</p>
+        
+        <div class="location-actions">
+          <div class="status-badge font-mono">
+            {% if haven.is_active %}
+              <span class="status-indicator safe-active"></span>ACTIVE
+            {% else %}
+              <span class="status-indicator"></span>INACTIVE
+            {% endif %}
+          </div>
+          <p class="intervention-count text-muted font-mono">Interventions: {{ haven.people_helped }}</p>
           
           <form method="POST" action="{% url 'update_status' haven.id %}">
             {% csrf_token %}
-            <button type="submit" class="btn-secondary" style="padding: 0px 12px; font-size: 12px;">
+            <button type="submit" class="btn-secondary btn-sm">
               Set {% if haven.is_active %}Inactive{% else %}Active{% endif %}
             </button>
           </form>
         </div>
       </div>
     {% empty %}
-      <div class="dash-card">
-        <p class="dash-card-desc">No locations registered yet. Add your first Safe Haven location to show up on the emergency search map.</p>
+      <div class="empty-state-card">
+        <p class="text-secondary">No locations registered yet. Add your first Safe Haven to initialize the local network.</p>
       </div>
     {% endfor %}
-    <a href="{% url 'add_location' %}" class="btn-secondary" style="
-      padding: 12px 16px;
-      width: 200px;
-      align-self: right;
-    ">Create a Safe Haven</a>
   </div>
 </section>
 
 <!-- Emergency Protocol Checklist -->
- 
-<section class="dash-card" style="margin-top: 40px;">
-  <h3 class="panel-title" style="margin-bottom: 16px;text-align: center;">Emergency Staff Protocol Checklist</h3>
+<section class="dashboard-section">
+  <h2 class="section-title">Emergency Protocol</h2>
   <div class="protocol-grid">
     {% for protocol in protocols %}
       <div class="protocol-card">
-        <h4 class="protocol-title">{{ protocol.title }}</h4>
-        <p class="protocol-desc">{{ protocol.description }}</p>
+        <h4 class="protocol-title editorial-title">{{ protocol.title }}</h4>
+        <p class="protocol-desc text-secondary">{{ protocol.description }}</p>
       </div>
     {% empty %}
-      <div class="protocol-card" style="grid-column: 1 / -1; text-align: center;">
-        <p class="protocol-desc">No protocols defined yet. Add custom steps in your Settings panel.</p>
+      <div class="empty-state-card">
+        <p class="text-secondary">No protocols defined. Configure standard operating procedures in settings.</p>
       </div>
     {% endfor %}
   </div>
-</div>
-  </ul>
 </section>
 {% endblock %}

@@ -1,147 +1,345 @@
-/* --- AUTHENTICATION CONTAINER & CARD --- */
+/* ==========================================================================
+   Project Lighthouse - Full-Bleed Vignette & Enlarged Postcards
+   ========================================================================== */
+
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 120px);
-  padding: 40px 20px;
+  min-height: 100vh;
+  padding: 130px 40px 80px 40px;
   box-sizing: border-box;
+  background-color: #000000;
+  position: relative;
+  overflow: hidden;
+  gap: 40px;
 }
 
-.auth-card {
+/* Full-bleed viewport gradient: No fixed pixel box, so it NEVER cuts off */
+.auth-vignette-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Deepest shadow in center, soft feathered transition outward */
+  background: radial-gradient(
+    ellipse 65% 65% at 50% 50%, 
+    rgba(0, 0, 0, 0.66) 20%, 
+    rgba(0, 0, 0, 0.3) 55%, 
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 3; /* Lies over postcards but below card */
+}
+
+/* --------------------------------------------------------------------------
+   Postcard Containers & Enlarged Dimensions
+   -------------------------------------------------------------------------- */
+.postcard-stack {
+  position: relative;
+  width: 380px;
+  height: 580px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+/* High-res postcard / matte print styling */
+.postcard-frame {
+  position: absolute;
+  background-color: #ffffff;
+  padding: 12px 12px 28px 12px;
+  border-radius: 4px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 6px 18px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.35s ease, 
+              z-index 0.3s ease;
+  will-change: transform;
+}
+
+.postcard-img {
   width: 100%;
-  max-width: 420px;
-  background-color: #141414;
-  border: 1px solid #282828;
-  border-radius: 16px;
-  padding: 40px 32px;
-  box-sizing: border-box;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%) contrast(108%);
 }
 
-/* --- TYPOGRAPHY --- */
+/* --- Left Stack (Enlarged) --- */
+.left-stack .card-back {
+  width: 330px;
+  height: 480px;
+  top: 10px;
+  right: -20px;
+  transform: rotate(3deg);
+  z-index: 1;
+}
+
+.left-stack .card-front {
+  width: 320px;
+  height: 380px;
+  bottom: 20px;
+  left: -30px;
+  transform: rotate(-6deg);
+  z-index: 2;
+}
+
+/* Shuffling outward on hover */
+.left-stack:hover .card-front {
+  transform: translate(-50px, -20px) rotate(-11deg) scale(1.03);
+  z-index: 4;
+  box-shadow: 0 35px 75px rgba(0, 0, 0, 0.95), 0 0 24px rgba(255, 255, 255, 0.12);
+}
+
+.left-stack:hover .card-back {
+  transform: translate(25px, 15px) rotate(6deg);
+}
+
+/* --- Right Stack (Enlarged) --- */
+.right-stack .card-back {
+  width: 360px;
+  height: 340px;
+  bottom: 20px;
+  right: -30px;
+  transform: rotate(-3deg);
+  z-index: 1;
+}
+
+.right-stack .card-front {
+  width: 380px;
+  height: 420px;
+  top: 15px;
+  left: -15px;
+  transform: rotate(5deg);
+  z-index: 2;
+}
+
+/* Shuffling outward on hover */
+.right-stack:hover .card-front {
+  transform: translate(50px, -25px) rotate(9deg) scale(1.03);
+  z-index: 4;
+  box-shadow: 0 35px 75px rgba(0, 0, 0, 0.95), 0 0 24px rgba(255, 255, 255, 0.12);
+}
+
+.right-stack:hover .card-back {
+  transform: translate(-25px, 30px) rotate(-6deg);
+}
+
+/* --------------------------------------------------------------------------
+   Center Register Card Component (Firmly in front)
+   -------------------------------------------------------------------------- */
+.auth-card.register-wide {
+  width: 100%;
+  max-width: 620px;
+  background-color: #0b0b0b;
+  border-radius: 20px;
+  padding: 48px 42px 40px 42px;
+  box-sizing: border-box;
+  border: 1px solid #1c1c1c;
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.58), 0 0 1px rgba(255, 255, 255, 0.08);
+  position: relative;
+  z-index: 5; /* Card sits above both the overlay and the postcards */
+  flex-shrink: 0;
+}
+
+.auth-header {
+  margin-bottom: 30px;
+}
+
 .auth-title {
-  font-family: 'Doto', sans-serif;
-  font-weight: 900;
-  font-size: 28px;
-  letter-spacing: 2px;
-  color: #ffffff;
-  margin: 0 0 6px 0;
-  text-align: center;
+  font-family: 'Serif-regular', serif;
+  font-size: 3.6rem;
+  line-height: 0.95;
+  color: #f5f5f5;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px 0;
+  font-weight: 400;
 }
 
 .auth-subtitle {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 14px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
   color: #888888;
-  margin: 0 0 28px 0;
-  text-align: center;
+  margin: 0;
+  max-width: 440px;
 }
 
-/* --- FORM & INPUT FIELDS --- */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   width: 100%;
 }
 
-.auth-form p {
-  margin: 0;
+.auth-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+}
+
+.auth-field-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
   width: 100%;
 }
 
-.auth-form label {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  color: #888888;
-  text-transform: uppercase;
+.auth-field-group label {
+  font-family: 'Serif-regular', serif;
+  font-size: 1.45rem;
+  line-height: 1;
+  color: #e2e2e2;
+  text-transform: lowercase;
+  letter-spacing: -0.01em;
+}
+
+/* Hide verbose Django helper texts */
+.auth-field-group ul,
+.auth-field-group .helptext,
+.auth-help-text,
+.auth-form ul {
+  display: none !important;
 }
 
 .auth-form input[type="text"],
 .auth-form input[type="password"],
 .auth-form input[type="email"] {
   width: 100%;
-  padding: 12px 16px;
-  background-color: #0d0d0d;
-  border: 1px solid #282828;
-  border-radius: 8px;
+  padding: 14px 18px;
+  background-color: #141414;
+  border: 1px solid #242424;
+  border-radius: 10px;
   color: #ffffff;
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 14px;
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 14.5px;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .auth-form input[type="text"]:focus,
 .auth-form input[type="password"]:focus,
 .auth-form input[type="email"]:focus {
-  outline: none;
-  border-color: #ff9d42;
-  box-shadow: 0 0 0 2px rgba(255, 157, 66, 0.15);
+  background-color: #181818;
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
 }
 
-/* --- ERROR DISPLAY --- */
-.auth-error-container {
-  background-color: rgba(255, 85, 85, 0.1);
-  border: 1px solid rgba(255, 85, 85, 0.3);
-  border-radius: 8px;
-  padding: 10px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 4px;
-}
-
-.auth-error-text {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 12px;
-  color: #ff5555;
-  margin: 0;
-}
-
-/* --- BUTTON & FOOTER --- */
 .auth-btn {
   width: 100%;
-  height: 44px;
-  margin-top: 12px;
-  background-color: #ff9d42;
-  border: 1px solid #ff9d42;
+  padding: 15px 20px;
+  margin-top: 8px;
+  background-color: #ffffff;
+  border: none;
   border-radius: 8px;
-  color: #0d0d0d;
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 14px;
+  color: #000000;
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
 .auth-btn:hover {
-  background-color: #e08833;
-  border-color: #e08833;
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* Plain White Minimal Errors */
+.error-wrapper.show {
+  display: block;
+  margin-top: 6px;
+}
+
+.error-wrapper-content {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.auth-error-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-error-text {
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 12px;
+  color: #ffffff;
+  opacity: 0.85;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.auth-footer-meta {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid #161616;
+  text-align: left;
 }
 
 .auth-footer {
-  font-family: 'SF Pro Display', -apple-system, sans-serif;
-  font-size: 13px;
-  color: #888888;
-  text-align: center;
-  margin: 24px 0 0 0;
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 12.5px;
+  color: #777777;
+  margin: 0;
 }
 
 .auth-link {
-  color: #ff9d42;
-  text-decoration: none;
-  font-weight: 600;
+  color: #dddddd;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .auth-link:hover {
-  color: #e08833;
-  text-decoration: underline;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Responsiveness
+   -------------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+  /* Scale down postcards slightly on medium screens */
+  .postcard-stack {
+    width: 240px;
+  }
+  .left-stack .card-back { width: 200px; height: 320px; }
+  .left-stack .card-front { width: 190px; height: 220px; }
+  .right-stack .card-back { width: 220px; height: 200px; }
+  .right-stack .card-front { width: 240px; height: 260px; }
+}
+
+@media (max-width: 1040px) {
+  /* Hide side postcards on laptops and tablets to preserve input ergonomics */
+  .postcard-stack,
+  .auth-vignette-overlay {
+    display: none;
+  }
+  .auth-card.register-wide {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-container {
+    padding: 100px 16px 40px 16px;
+  }
+  .auth-grid-row {
+    grid-template-columns: 1fr;
+  }
+  .auth-card.register-wide {
+    padding: 32px 22px;
+  }
+  .auth-title {
+    font-size: 2.8rem;
+  }
 }

@@ -5,54 +5,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Project Lighthouse{% endblock %}</title>
-    {% block extra_css %}
-    
-    {% endblock %}
-    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-
-    
-    <header class="main-header">
-  <!-- Top Emergency Ticker Bar -->
-  <div class="emergency-bar">
-    <div class="ticker-content">
-      <span>IN IMMEDIATE DANGER? CALL 911</span>   |   
-      <span>PNP ALANG PULIS: 0919-777-7377</span>   |   
-      <span>DSWD HOTLINE: (02) 8931-8101</span>   |   
-      <span>IN IMMEDIATE DANGER? CALL 911</span>   |   
-      <span>PNP ALANG PULIS: 0919-777-7377</span>   |   
-      <span>DSWD HOTLINE: (02) 8931-8101</span>
-    </div>
+<body>
+<!--
+<div class="emergency-bar">
+  <div class="ticker-content">
+    <span>IN IMMEDIATE DANGER? CALL 911</span>   |   
+    <span>PNP ALANG PULIS: 0919-777-7377</span>   |   
+    <span>DSWD HOTLINE: (02) 8931-8101</span>   |   
+    <span>IN IMMEDIATE DANGER? CALL 911</span>   |   
+    <span>PNP ALANG PULIS: 0919-777-7377</span>   |   
+    <span>DSWD HOTLINE: (02) 8931-8101</span>
   </div>
-
-  <!-- Navigation Bar -->
+</div>
+-->
+<header class="main-header">
   <nav class="navbar">
-    <div class="nav-brand">
-      <span class="logo-text">PROJECT LIGHTHOUSE</span>
-      <!-- <span class="logo-divider">· — — · — · — — — · — — — · — — · — — · — —</span> -->
-    </div>
-
+    <a href="{% url 'landing' %}" class="logo">project<br>lighthouse</a>
+    
     <ul class="nav-links">
-      <li><a href="{% url 'landing' %}">Home</a></li>
-      <li><a href="#safe-havens">Safe Havens</a></li>
-      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="{% url 'landing' %}">home</a></li>
+      <li><a href="#safe-havens">safe havens</a></li>
+      <li><a href="#how-it-works">how it works</a></li>
       <li>
         {% if user.is_authenticated %}
-        <a href="{% url 'show_home' %}" class="user-greeting">Hello {{ user.first_name }}!</a>
+          <a href="{% url 'show_home' %}">dashboard</a>
         {% else %}
           <a href="{% url 'login' %}">Login</a>
         {% endif %}
       </li>
     </ul>
 
-    <a href="https://www.google.com" class="quick-exit-btn">Quick Exit (ESC)</a>
+    <a href="https://www.google.com" class="quick-exit-btn">Quick Exit (Esc)</a>
   </nav>
 </header>
-<body>
-    <div class="container">
-        {% block content %}
-       
-        {% endblock %}
+
+<main class="container">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<!-- Global Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    
+    <!-- Top Nav Columns -->
+    <div class="footer-columns">
+      
+      <!-- Column 1: Immediate Safety -->
+      <div class="footer-col">
+        <h4>Safe Havens</h4>
+        <ul>
+          <li><a href="#safe-havens">Find Nearby Sanctuary</a></li>
+          <li><a href="#how-it-works">Secret Phrase Guide</a></li>
+          <li><a href="#safe-havens">Interactive Haven Map</a></li>
+          <li><a href="#">Discreet Dispatch Ping</a></li>
+          <li><a href="#">Emergency Exit Protocols</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 2: Hotlines & Crisis -->
+      <div class="footer-col">
+        <h4>24/7 Lifelines</h4>
+        <ul>
+          <li><a href="tel:911">National Emergency (911)</a></li>
+          <li><a href="tel:1343">Inter-Agency Council on VAWC (1343)</a></li>
+          <li><a href="tel:0287348639">PNP Women & Children Desk</a></li>
+          <li><a href="tel:0289318101">DSWD Crisis Intervention</a></li>
+          <li><a href="#">Confidential SMS Line</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Sanctuaries & Partners -->
+      <div class="footer-col">
+        <h4>Partners</h4>
+        <ul>
+          <li><a href="#">Register a Safe Haven</a></li>
+          <li><a href="#">Staff Verification Protocol</a></li>
+          <li><a href="#">Barangay Desk Portal</a></li>
+          <li><a href="#">Community Network Login</a></li>
+          <li><a href="#">Safe Haven Guidelines</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: About Project Lighthouse -->
+      <div class="footer-col">
+        <h4>About Lighthouse</h4>
+        <ul>
+          <li><a href="#">Our Mission</a></li>
+          <li><a href="#">Trauma-Informed Design</a></li>
+          <li><a href="#">Zero-Trace Privacy Policy</a></li>
+          <li><a href="#">Security & Data Encryption</a></li>
+          <li><a href="#">Contact Safety Coordinators</a></li>
+        </ul>
+      </div>
+
     </div>
+
+    <!-- Bottom Metadata Bar -->
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Project Lighthouse. All rights reserved. For urgent danger, call 911 immediately.</p>
+      
+      <div class="footer-legal">
+        <a href="#">Zero-Trace Policy</a>
+        <a href="#">Privacy Practice</a>
+        <a href="#">Terms of Safety</a>
+        <a href="#">Clear Browsing Guide</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
 </body>
 </html>

@@ -2,145 +2,484 @@
 {% load static %}
 
 {% block extra_css %}
-  <!-- Link your extracted CSS file here -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <link rel="stylesheet" href="{% static 'css/core/landing.css' %}">
 {% endblock %}
 
 {% block content %}
-<main class="container">
-  <!-- Hero Wrapper -->
-  <section class="hero-wrapper">
-    <div class="hero-box">
-      <span class="hero-sub">PROJECT</span>
-      <h1 class="hero-main-title">LIGHTHOUSE</h1>
-      <div class="hero-morse">· — — · — · — — — · — — — · — — · — — · — —</div>
-      
-      <p class="hero-desc">
-        Find immediate safe havens near you—or register your business<br>
-        to become a sanctuary for those escaping abuse.
-      </p>
 
-      <div class="hero-btns">
-        <a href="" class="btn-action btn-white">Find a Safe Haven</a>
-        <a href="" class="btn-action btn-dark">Register Your Business</a>
+<section class="hero-wrapper">
+  <div class="hero-content">
+    
+    <div class="hero-left-col">
+      <p class="subtitle-top">100% Confidential & Safe</p>
+      <h1 class="title">You don't have<br>to face this alone.</h1>
+    </div>
+
+    <div class="hero-right-col">
+      <p class="description-right">Taking the first step toward safety is the hardest part, but we are here to light the way. Connect instantly with a verified local sanctuary—because you don't have to face this alone.</p>
+      
+      <div class="hero-btns-right">
+        <a href="#safe-havens" class="btn-white">Find a Safe Haven</a>
+        <a href="#" class="btn-outline">Register a Safe Haven</a>
       </div>
     </div>
 
-    <!-- Stats Section (Pinned to the bottom right of the hero banner) -->
-    <section class="stats-section">
-      <div class="stat-item">
-        <span class="stat-number">1,240+</span>
-        <span class="stat-label">SHELTERED USERS</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">450+</span>
-        <span class="stat-label">LIGHTHOUSES NATIONWIDE</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">100%</span>
-        <span class="stat-label">CONFIDENTIAL</span>
-      </div>
-    </section>
-  </section>
+  </div>
+</section>
 
-  <!-- Testimonials Section -->
-  <section class="testimonials-section">
-    <div class="carousel-track">
-      
-      <!-- Card 1 -->
-      <div class="testimonial-card">
-        <p class="testimonial-text">
-          "I didn't know where to run at 2 AM. The map guided me to a 24-hour convenience store three blocks away. The staff knew exactly what to do and gave me a safe place to sit while calling support."
-        </p>
-        <span class="testimonial-author">— M. K., Quezon City (Safe Haven User)</span>
+<!-- How It Works Section -->
+<section class="how-it-works-section" id="how-it-works">
+  <div class="hiw-container">
+    
+    <!-- DIV 1: Content (Header & Moving Accordion Steps stacked) -->
+    <div class="hiw-content-col">
+      <div class="hiw-header">
+        <h2>how project<br>lighthouse works?</h2>
+        <p class="hiw-intro">A discreet, secure lifeline connecting individuals escaping abuse with verified local sanctuaries and immediate shelter.</p>
       </div>
 
-      <!-- Card 2 -->
-      <div class="testimonial-card">
-        <p class="testimonial-text">
-          "Registering our 24/7 store as a Lighthouse took less than 10 minutes. Last month, our night shift team sheltered a young mother until local officers arrived. It gives our business real purpose."
-        </p>
-        <span class="testimonial-author">— Branch Manager, ExpressMart (Partner Establishment)</span>
-      </div>
+      <div class="hiw-accordion-group">
+        <!-- Step 1 -->
+        <div class="hiw-panel active">
+          <div class="hiw-collapsed-content">
+            <span class="hiw-num">1</span>
+            <span class="hiw-vertical-title">Search Area</span>
+          </div>
+          <div class="hiw-expanded-content">
+            <span class="hiw-num">1</span>
+            <h3>Search Your Area</h3>
+            <p>Enter your location on our interactive map to instantly locate verified safe havens, community desks, and shelters near you.</p>
+          </div>
+        </div>
 
-      <!-- Card 3 -->
-      <div class="testimonial-card">
-        <p class="testimonial-text">
-          "Having a quick escape button and discrete mapping gave me the courage to leave. I reached a verified pharmacy nearby, and the crew made sure I was safe until help arrived."
-        </p>
-        <span class="testimonial-author">— R. T., Cebu City (Safe Haven User)</span>
-      </div>
+        <!-- Step 2 -->
+        <div class="hiw-panel">
+          <div class="hiw-collapsed-content">
+            <span class="hiw-num">2</span>
+            <span class="hiw-vertical-title">View the secret phrase</span>
+          </div>
+          <div class="hiw-expanded-content">
+            <span class="hiw-num">2</span>
+            <h3>View the secret phrase</h3>
+            <p>Open any safe haven profile to reveal confidential instructions and a unique secret phrase required for discreet verification upon arrival.</p>
+          </div>
+        </div>
 
-      <!-- Card 4 -->
-      <div class="testimonial-card">
-        <p class="testimonial-text">
-          "As a gas station manager operating 24 hours, joining Lighthouse was a no-brainer. The specialized training provided to our staff helped us de-escalate a dangerous situation last week."
-        </p>
-        <span class="testimonial-author">— J. L., Davao City (Partner Establishment)</span>
-      </div>
+        <!-- Step 3 -->
+        <div class="hiw-panel">
+          <div class="hiw-collapsed-content">
+            <span class="hiw-num">3</span>
+            <span class="hiw-vertical-title">Send a Ping</span>
+          </div>
+          <div class="hiw-expanded-content">
+            <span class="hiw-num">3</span>
+            <h3>Send a Discreet Ping</h3>
+            <p>Share brief details and select pre-defined descriptors so staff know what to expect and how to prepare for your arrival.</p>
+          </div>
+        </div>
 
-      <!-- Card 5 -->
-      <div class="testimonial-card">
-        <p class="testimonial-text">
-          "I was being followed late at night. Finding a nearby verified sanctuary cafe saved my life. The barista let me stay in the back office until family arrived."
-        </p>
-        <span class="testimonial-author">— A. S., Pasig City (Safe Haven User)</span>
+        <!-- Step 4 -->
+        <div class="hiw-panel">
+          <div class="hiw-collapsed-content">
+            <span class="hiw-num">4</span>
+            <span class="hiw-vertical-title">Arrive & Connect</span>
+          </div>
+          <div class="hiw-expanded-content">
+            <span class="hiw-num">4</span>
+            <h3>Arrive & Connect Safely</h3>
+            <p>Proceed to the location and quietly share your secret phrase with the staff. They will immediately recognize your signal and secure your safety.</p>
+          </div>
+        </div>
       </div>
-
-      <!-- Card 6 -->
-      <div class="testimonial-card">
-        <p class="testimonial-text">
-          "Being able to turn our hotel lobby into a safe zone has made an active impact in our community. The platform interface is seamless and secure."
-        </p>
-        <span class="testimonial-author">— Operations Head, CityStay Hotel (Partner)</span>
-      </div>
-
-      <!-- DUPLICATE CARDS FOR SEAMLESS INFINITE LOOP -->
-      <div class="testimonial-card" aria-hidden="true">
-        <p class="testimonial-text">
-          "I didn't know where to run at 2 AM. The map guided me to a 24-hour convenience store three blocks away. The staff knew exactly what to do and gave me a safe place to sit while calling support."
-        </p>
-        <span class="testimonial-author">— M. K., Quezon City (Safe Haven User)</span>
-      </div>
-
-      <div class="testimonial-card" aria-hidden="true">
-        <p class="testimonial-text">
-          "Registering our 24/7 store as a Lighthouse took less than 10 minutes. Last month, our night shift team sheltered a young mother until local officers arrived. It gives our business real purpose."
-        </p>
-        <span class="testimonial-author">— Branch Manager, ExpressMart (Partner Establishment)</span>
-      </div>
-
-      <div class="testimonial-card" aria-hidden="true">
-        <p class="testimonial-text">
-          "Having a quick escape button and discrete mapping gave me the courage to leave. I reached a verified pharmacy nearby, and the crew made sure I was safe until help arrived."
-        </p>
-        <span class="testimonial-author">— R. T., Cebu City (Safe Haven User)</span>
-      </div>
-
-      <div class="testimonial-card" aria-hidden="true">
-        <p class="testimonial-text">
-          "As a gas station manager operating 24 hours, joining Lighthouse was a no-brainer. The specialized training provided to our staff helped us de-escalate a dangerous situation last week."
-        </p>
-        <span class="testimonial-author">— J. L., Davao City (Partner Establishment)</span>
-      </div>
-
-      <div class="testimonial-card" aria-hidden="true">
-        <p class="testimonial-text">
-          "I was being followed late at night. Finding a nearby verified sanctuary cafe saved my life. The barista let me stay in the back office until family arrived."
-        </p>
-        <span class="testimonial-author">— A. S., Pasig City (Safe Haven User)</span>
-      </div>
-
-      <div class="testimonial-card" aria-hidden="true">
-        <p class="testimonial-text">
-          "Being able to turn our hotel lobby into a safe zone has made an active impact in our community. The platform interface is seamless and secure."
-        </p>
-        <span class="testimonial-author">— Operations Head, CityStay Hotel (Partner)</span>
-      </div>
-
     </div>
-  </section>
-</main>
 
+    <!-- DIV 2: Lighthouse Picture Column -->
+    <div class="hiw-image-col">
+      <img src="{% static 'images/right-image.gif' %}" alt="Lighthouse beacon" class="hiw-lighthouse-gif">
+    </div>
 
+  </div>
+</section>
+
+<!-- Integrated Safe Havens Section -->
+<section class="safe-havens-section" id="safe-havens">
+  <div class="safe-havens-topbar">
+    <h2 class="sh-title">Find a safe haven.</h2>
+    <form id="location-search-form" class="sh-search-bar">
+      <input 
+        type="text" 
+        id="location-input" 
+        class="sh-location-input" 
+        placeholder="enter your location..." 
+        required
+      >
+      <button type="submit" class="sh-search-btn">Search Safe Haven</button>
+    </form>
+  </div>
+
+  <div class="safe-havens-map-wrapper">
+    <div id="safe-haven-map" class="sh-map-canvas"></div>
+
+    <!-- Floating Bottom Carousel Overlay -->
+    <div class="sh-carousel-container" id="carousel-container">
+      <button type="button" class="sh-nav-btn prev-btn" id="carousel-prev" aria-label="Previous Sanctuaries">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+
+      <div class="sh-carousel-track-wrapper">
+        <div class="sh-carousel-track" id="locations-list">
+          <!-- Populated via JavaScript -->
+        </div>
+      </div>
+
+      <button type="button" class="sh-nav-btn next-btn" id="carousel-next" aria-label="Next Sanctuaries">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Safe Haven Details & Secret Phrase Modal -->
+<div class="sh-modal-backdrop" id="sh-modal-backdrop">
+  <div class="sh-modal-dialog" role="dialog" aria-modal="true">
+    <button class="sh-modal-close" id="sh-modal-close" aria-label="Close modal">&times;</button>
+    
+    <div class="sh-modal-header">
+      <span class="sh-badge-safe">Verified Safe Haven</span>
+      <h3 id="modal-name">Sanctuary Name</h3>
+      <p id="modal-address">Location Address</p>
+    </div>
+
+    <div class="sh-modal-body">
+      <!-- Confidential Secret Phrase Box -->
+      <div class="sh-phrase-box">
+        <label>Discreet Secret Verification Phrase</label>
+        <div class="sh-phrase-value" id="modal-phrase">"I'm here for the package"</div>
+        <small>Quietly state this phrase to staff at the front desk or register upon arrival.</small>
+      </div>
+
+      <!-- Quick Context / Descriptors -->
+      <div class="sh-descriptors-section">
+        <label>Pre-Defined Descriptors (Selected during ping)</label>
+        <div class="sh-tag-cloud" id="modal-tags">
+          <span class="sh-tag">Immediate Safe Room</span>
+          <span class="sh-tag">Discrete Transport</span>
+          <span class="sh-tag">Private Rest Area</span>
+        </div>
+      </div>
+
+      <!-- Instructions & Details -->
+      <div class="sh-meta-details">
+        <div class="sh-meta-row">
+          <strong>Operating Hours:</strong> <span id="modal-time">Open 24/7</span>
+        </div>
+        <div class="sh-meta-row">
+          <strong>Direct Line:</strong> <span id="modal-phone">0917-000-0000</span>
+        </div>
+        <div class="sh-meta-row">
+          <strong>Staff Protocol:</strong> <span id="modal-protocol">Standard quiet check-in protocol active.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sh-modal-actions">
+      <button class="btn-primary" id="btn-ping-shelter">Send Discreet Ping</button>
+      <button class="btn-outline-modal" id="btn-close-modal">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- Leaflet JS (CSS is cleanly imported in extra_css) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const map = L.map('safe-haven-map', {
+      zoomControl: false
+    }).setView([10.3300, 123.8900], 14);
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // Invalidate size in case CSS container takes a moment to paint
+    setTimeout(() => { map.invalidateSize(); }, 200);
+
+    let currentMarker = null;
+    let sanctuaryLayer = L.layerGroup().addTo(map);
+    let markerMap = new Map();
+    let currentIndex = 0;
+    const cardsPerView = 3;
+
+    const searchForm = document.getElementById('location-search-form');
+    const locationInput = document.getElementById('location-input');
+    const track = document.getElementById('locations-list');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+
+    // Modal elements
+    const modalBackdrop = document.getElementById('sh-modal-backdrop');
+    const modalClose = document.getElementById('sh-modal-close');
+    const btnDismiss = document.getElementById('btn-close-modal');
+    const btnPing = document.getElementById('btn-ping-shelter');
+    const modalName = document.getElementById('modal-name');
+    const modalAddress = document.getElementById('modal-address');
+    const modalPhrase = document.getElementById('modal-phrase');
+    const modalTime = document.getElementById('modal-time');
+    const modalPhone = document.getElementById('modal-phone');
+    const modalProtocol = document.getElementById('modal-protocol');
+
+    function closeModal() {
+      modalBackdrop.classList.remove('active');
+    }
+    modalClose.addEventListener('click', closeModal);
+    btnDismiss.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    const initialSanctuaries = [
+      {
+        id: 1,
+        name: "Guadalupe Community Haven",
+        address: "Labra St, Guadalupe",
+        dist: "0.4 km away",
+        time: "Open 24/7",
+        phone: "0917-234-5678",
+        lat: 10.3235,
+        lon: 123.8821,
+        phrase: '"Looking for Dr. Evelyn\'s book"',
+        protocol: "Staff will escort you immediately behind the reception partitions without requiring an ID."
+      },
+      {
+        id: 2,
+        name: "Lahug Sanctuary Desk",
+        address: "Salinas Dr, Lahug",
+        dist: "0.9 km away",
+        time: "Open 24/7",
+        phone: "0919-876-5432",
+        lat: 10.3340,
+        lon: 123.8995,
+        phrase: '"Is the blue room reserved?"',
+        protocol: "Private side office with an unmonitored rear phone booth and emergency taxi voucher."
+      },
+      {
+        id: 3,
+        name: "Banilad Quiet Haven",
+        address: "Gov. M. Cuenco Ave, Banilad",
+        dist: "1.4 km away",
+        time: "07:00 AM - 11:00 PM",
+        phone: "0920-333-8899",
+        lat: 10.3450,
+        lon: 123.9110,
+        phrase: '"Checking on the lighthouse roster"',
+        protocol: "Dedicated safe space inside back office. Trauma counselor on-call."
+      },
+      {
+        id: 4,
+        name: "Capitol Shelter Hub",
+        address: "Escario St, Capitol Site",
+        dist: "1.8 km away",
+        time: "Open 24/7",
+        phone: "0918-555-1212",
+        lat: 10.3175,
+        lon: 123.8920,
+        phrase: '"Requesting weather updates"',
+        protocol: "24-hour guarded perimeter with discrete emergency transport link."
+      },
+      {
+        id: 5,
+        name: "Apas Protection Point",
+        address: "Apas Road, IT Corridor",
+        dist: "2.3 km away",
+        time: "Open 24/7",
+        phone: "0922-999-4321",
+        lat: 10.3312,
+        lon: 123.9080,
+        phrase: '"Need quiet reading material"',
+        protocol: "Medical first-aid supplies and private family room available."
+      }
+    ];
+
+    function renderSanctuaries(list) {
+      track.innerHTML = '';
+      sanctuaryLayer.clearLayers();
+      markerMap.clear();
+
+      list.forEach((haven, idx) => {
+        const customIcon = L.divIcon({
+          className: 'sh-map-pin',
+          html: `<div class="pin-inner" id="pin-${haven.id}"><span>${idx + 1}</span></div>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
+        });
+
+        const marker = L.marker([haven.lat, haven.lon], { icon: customIcon }).addTo(sanctuaryLayer);
+        marker.bindPopup(`<b>${haven.name}</b><br>${haven.address}<br><em>${haven.dist}</em>`);
+        markerMap.set(haven.id, marker);
+
+        const card = document.createElement('div');
+        card.className = 'sh-haven-card';
+        card.dataset.id = haven.id;
+        card.innerHTML = `
+          <div class="sh-card-header">
+            <span class="sh-card-num">${idx + 1}</span>
+            <span class="sh-card-dist">${haven.dist}</span>
+          </div>
+          <h4 class="sh-card-title">${haven.name}</h4>
+          <p class="sh-card-addr">${haven.address}</p>
+          <div class="sh-card-footer">
+            <span class="sh-status-pill">${haven.time}</span>
+            <span class="sh-view-details">Click for instructions &rarr;</span>
+          </div>
+        `;
+
+        card.addEventListener('mouseenter', () => {
+          const m = markerMap.get(haven.id);
+          if (m) {
+            document.querySelectorAll('.pin-inner').forEach(p => p.classList.remove('active'));
+            const innerPin = document.getElementById(`pin-${haven.id}`);
+            if (innerPin) innerPin.classList.add('active');
+            map.panTo([haven.lat, haven.lon], { animate: true, duration: 0.6 });
+            m.openPopup();
+          }
+        });
+
+        card.addEventListener('mouseleave', () => {
+          const innerPin = document.getElementById(`pin-${haven.id}`);
+          if (innerPin) innerPin.classList.remove('active');
+        });
+
+        card.addEventListener('click', () => {
+          modalName.textContent = haven.name;
+          modalAddress.textContent = haven.address;
+          modalPhrase.textContent = haven.phrase;
+          modalTime.textContent = haven.time;
+          modalPhone.textContent = haven.phone;
+          modalProtocol.textContent = haven.protocol;
+          btnPing.onclick = () => {
+            alert(`Discrete ping sent to ${haven.name}. Staff have been notified.`);
+            closeModal();
+          };
+          modalBackdrop.classList.add('active');
+        });
+
+        track.appendChild(card);
+      });
+
+      currentIndex = 0;
+      updateCarouselUI(list.length);
+    }
+    function getVisibleCardsCount() {
+      const containerWidth = track.parentElement.offsetWidth;
+      if (containerWidth < 600) return 1;
+      if (containerWidth < 900) return 2;
+      return 3;
+    }
+
+    function updateCarouselUI(totalItems) {
+      const visibleCount = getVisibleCardsCount();
+      if (totalItems <= visibleCount) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        track.style.justifyContent = 'center';
+        track.style.transform = 'none';
+      } else {
+        prevBtn.style.display = 'flex';
+        nextBtn.style.display = 'flex';
+        track.style.justifyContent = 'flex-start';
+        updateArrowState(totalItems);
+        slideCarousel();
+      }
+    }
+
+    function updateArrowState(totalItems) {
+      const visibleCount = getVisibleCardsCount();
+      prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
+      prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+
+      const maxIndex = Math.max(0, totalItems - visibleCount);
+      nextBtn.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
+      nextBtn.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
+    }
+
+    function slideCarousel() {
+      const card = track.querySelector('.sh-haven-card');
+      if (!card) return;
+      
+      const cardWidth = card.getBoundingClientRect().width;
+      const gap = 16; // Matches the CSS gap: 16px
+      const shift = (cardWidth + gap) * currentIndex;
+      
+      track.style.transform = `translateX(-${shift}px)`;
+      updateArrowState(track.children.length);
+    }
+
+    // Recalculate if the browser window resizes
+    window.addEventListener('resize', () => {
+      slideCarousel();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const totalCards = track.children.length;
+      if (currentIndex < totalCards - cardsPerView) {
+        currentIndex++;
+        slideCarousel();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        slideCarousel();
+      }
+    });
+
+    searchForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = locationInput.value.trim();
+      if (!query) return;
+
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+
+            map.flyTo([lat, lon], 14, { duration: 1.2 });
+
+            if (currentMarker) map.removeLayer(currentMarker);
+            currentMarker = L.marker([lat, lon], { title: "Searched Location" }).addTo(map);
+
+            const generated = [
+              { id: 101, name: `${query} Central Haven`, address: `${query} Center St`, dist: "0.3 km away", time: "Open 24/7", phone: "0917-100-2000", lat: lat + 0.003, lon: lon + 0.003, phrase: '"Checking on the lighthouse roster"', protocol: "Front desk staff briefed." },
+              { id: 102, name: `${query} East Sanctuary`, address: `${query} East Ave`, dist: "0.8 km away", time: "Open 24/7", phone: "0918-200-3000", lat: lat - 0.004, lon: lon + 0.005, phrase: '"Is the quiet desk open?"', protocol: "Private side room secured." },
+              { id: 103, name: `${query} Safe Point`, address: `${query} Main Blvd`, dist: "1.2 km away", time: "08:00 AM - 10:00 PM", phone: "0920-300-4000", lat: lat + 0.005, lon: lon - 0.004, phrase: '"Need the courier package"', protocol: "Discreet rear exit available." },
+              { id: 104, name: `${query} West Haven`, address: `${query} West Rd`, dist: "1.7 km away", time: "Open 24/7", phone: "0922-400-5000", lat: lat - 0.006, lon: lon - 0.006, phrase: '"Reservation under Lighthouse"', protocol: "Immediate shelter assistance." },
+              { id: 105, name: `${query} North Sanctuary`, address: `${query} North Highway`, dist: "2.1 km away", time: "Open 24/7", phone: "0923-500-6000", lat: lat + 0.008, lon: lon + 0.001, phrase: '"Looking for quiet respite"', protocol: "On-site safety coordinator." }
+            ];
+
+            renderSanctuaries(generated);
+          } else {
+            alert('Location not found. Please try another city or barangay name.');
+          }
+        })
+        .catch(err => console.error('Geocoding error:', err));
+    });
+
+    renderSanctuaries(initialSanctuaries);
+  });
+</script>
 {% endblock %}
