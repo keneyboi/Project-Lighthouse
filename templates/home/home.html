@@ -1,13 +1,13 @@
 {% extends 'dashboard_base.html' %}
 {% load static %}
 
-{% block dashboard_css %}
+{% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
 {% endblock %}
 
 {% block dashboard_content %}
 <header class="view-header">
-  <h1 class="hero-title">safe haven control</h1>
+  <h1 class="hero-title">Safe Haven Control</h1>
   <p class="subtitle text-secondary">Operational overview for {{ user.first_name }}</p>
 </header>
 
