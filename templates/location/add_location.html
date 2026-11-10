@@ -1,36 +1,54 @@
 {% extends 'dashboard_base.html' %}
 {% load static %}
+
 {% block extra_css %}
-  <!-- Link your extracted CSS file here -->
+  <!-- Make sure to block name matches the base template (dashboard_css) -->
   <link rel="stylesheet" href="{% static 'css/location/location.css' %}">
 {% endblock %}
 
 {% block dashboard_content %}
-<header class="dashboard-header">
-  <div>
-    <h1 class="dashboard-title">ADD NEW SAFE HAVEN</h1>
-    <p class="dashboard-subtitle">Register a physical establishment branch to house victims in emergency situations.</p>
-  </div>
+<header class="location-header">
+  <h1 class="editorial-title">Add New Safe Haven</h1>
+  <p class="dashboard-subtitle">Register a physical establishment branch to house victims in emergency situations.</p>
 </header>
 
-<div class="location-form-card">
-  <form method="POST" action="{% url 'add_location' %}" class="location-form">
-    {% csrf_token %}
+<div class="location-cards-container">
+  <div class="location-form-card">
     
-    {% for field in form %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}
-          <span class="form-error">{{ field.errors.0 }}</span>
-        {% endif %}
+    <!-- Card Header with Icon -->
+    <div class="card-header-with-icon">
+      <div class="icon-wrapper">
+        <svg class="panel-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
       </div>
-    {% endfor %}
-
-    <div class="form-actions">
-      <button type="submit" class="btn-primary">Save Location</button>
-      <a href="{% url 'show_home' %}" class="btn-secondary">Cancel</a>
+      <div>
+        <h3 class="panel-title">Location Details</h3>
+      </div>
     </div>
-  </form>
+
+    <form method="POST" action="{% url 'add_location' %}" class="location-form">
+      {% csrf_token %}
+      
+      {% for field in form %}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <span class="form-error">{{ field.errors.0 }}</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="form-actions" style="margin-top: 8px;">
+        <button type="submit" class="btn-primary">Save Location</button>
+        <a href="{% url 'show_home' %}" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
+
+  </div>
 </div>
 {% endblock %}
