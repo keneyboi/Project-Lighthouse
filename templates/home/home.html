@@ -27,7 +27,7 @@
 <section class="dashboard-section">
   <div class="section-header-flex">
     <h2 class="section-title">Managed Locations</h2>
-    <a href="{% url 'add_location' %}" class="btn-primary">Create Safe Haven</a>
+    <a href="{% url 'manage_locations' %}" class="btn-primary">Manage Safe Havens</a>
   </div>
   
   <div class="locations-stack">
@@ -61,7 +61,8 @@
       </div>
     {% empty %}
       <div class="empty-state-card">
-        <p class="text-secondary">No locations registered yet. Add your first Safe Haven to initialize the local network.</p>
+        <p class="text-secondary" style="margin-bottom: 14px;">No locations registered yet. Add your first Safe Haven to initialize the local network.</p>
+        <a href="{% url 'manage_locations' %}" class="btn-primary">+ Register Safe Haven</a>
       </div>
     {% endfor %}
   </div>

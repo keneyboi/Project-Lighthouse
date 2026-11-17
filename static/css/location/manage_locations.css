@@ -1,0 +1,730 @@
+/* ==========================================================================
+   Project Lighthouse — Safe Havens Management Dashboard
+   Design Token Baseline: Editorial Noir & Trauma-Informed Monochromatic Grid
+   ========================================================================== */
+
+:root {
+  --canvas-void: #000000;
+  --surface-card: #0b0b0b;
+  --surface-card-hover: #121212;
+  --surface-input: #141414;
+  --surface-elevated: #1e1e1e;
+  --border-subdued: #1c1c1c;
+  --border-active: rgba(255, 255, 255, 0.28);
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --text-muted: #555555;
+  --accent-beacon: #ff9d42;
+  --status-active: #4ade80;
+  --status-inactive: #666666;
+  --status-danger: #ef4444;
+  --font-serif: 'Serif-regular', Georgia, serif;
+  --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Doto', monospace;
+}
+
+/* --- Page Header --- */
+.manage-havens-header {
+  margin-bottom: 32px;
+}
+
+.manage-title {
+  font-family: var(--font-serif);
+  font-size: 3.2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.manage-subtitle {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ==========================================================================
+   1. Interactive Map Section (Top)
+   ========================================================================== */
+.map-section-wrapper {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background-color: #121212;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-subdued);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  margin-bottom: 28px;
+}
+
+.dashboard-map-canvas {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Leaflet Tile Inversion matching landing page */
+.dashboard-map-canvas .leaflet-tile {
+  filter: grayscale(100%) invert(90%) contrast(120%) brightness(95%);
+}
+
+/* Custom Marker Pins */
+.sh-manage-pin .pin-inner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  border: 2px solid #000000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.sh-manage-pin.active-pin .pin-inner {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.sh-manage-pin.active-pin:hover .pin-inner,
+.sh-manage-pin.active-pin.highlighted .pin-inner {
+  background-color: var(--accent-beacon);
+  color: #ffffff;
+  transform: scale(1.25);
+  box-shadow: 0 0 14px rgba(255, 157, 66, 0.85);
+}
+
+.sh-manage-pin.inactive-pin .pin-inner {
+  background-color: #333333;
+  color: #888888;
+  border-color: #222222;
+}
+
+.sh-manage-pin.inactive-pin:hover .pin-inner,
+.sh-manage-pin.inactive-pin.highlighted .pin-inner {
+  background-color: #555555;
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
+/* Popup Customization */
+.leaflet-popup-content-wrapper {
+  background: #141414 !important;
+  color: #ffffff !important;
+  border: 1px solid #282828;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8) !important;
+}
+
+.leaflet-popup-tip {
+  background: #141414 !important;
+}
+
+.popup-haven-title {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: #ffffff;
+}
+
+.popup-haven-meta {
+  font-size: 11.5px;
+  color: #888888;
+  margin: 0 0 6px 0;
+}
+
+.popup-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.popup-badge.active {
+  background: rgba(74, 222, 128, 0.15);
+  color: var(--status-active);
+}
+
+.popup-badge.inactive {
+  background: rgba(136, 136, 136, 0.15);
+  color: #888888;
+}
+
+/* ==========================================================================
+   2. Action & Filter Bar (Middle)
+   ========================================================================== */
+.toolbar-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 440px;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: #777777;
+  pointer-events: none;
+}
+
+.sh-filter-input {
+  width: 100%;
+  background-color: var(--surface-input);
+  border: 1px solid #242424;
+  border-radius: 8px;
+  padding: 12px 16px 12px 42px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.sh-filter-input::placeholder {
+  color: #666666;
+}
+
+.sh-filter-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.35);
+  background-color: #181818;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+.btn-create-haven {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 22px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-create-haven:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   3. Registered Safe Havens List (Bottom)
+   ========================================================================== */
+.havens-list-container {
+  max-height: 520px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Custom Scrollbar */
+.havens-list-container::-webkit-scrollbar {
+  width: 6px;
+}
+.havens-list-container::-webkit-scrollbar-track {
+  background: #080808;
+  border-radius: 4px;
+}
+.havens-list-container::-webkit-scrollbar-thumb {
+  background: #242424;
+  border-radius: 4px;
+}
+.havens-list-container::-webkit-scrollbar-thumb:hover {
+  background: #363636;
+}
+
+/* Safe Haven Card Row */
+.haven-row-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subdued);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+  position: relative;
+}
+
+.haven-row-card:hover {
+  border-color: var(--border-active);
+  background-color: var(--surface-card-hover);
+}
+
+.haven-row-card.is-inactive {
+  opacity: 0.65;
+}
+
+.haven-row-card.is-inactive:hover {
+  opacity: 0.9;
+}
+
+/* Left: Info */
+.haven-left-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.haven-row-title {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.haven-row-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.haven-row-location svg {
+  flex-shrink: 0;
+  color: #777777;
+}
+
+.haven-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.82rem;
+  color: #666666;
+  margin-top: 2px;
+}
+
+.phrase-snippet {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent-beacon);
+}
+
+/* Right: Status Pill & Action Menu */
+.haven-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+/* Status Pill Badge */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.status-pill.active {
+  background: rgba(74, 222, 128, 0.12);
+  color: var(--status-active);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.status-pill.active .status-dot {
+  background-color: var(--status-active);
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.status-pill.inactive {
+  background: rgba(136, 136, 136, 0.12);
+  color: #888888;
+  border: 1px solid rgba(136, 136, 136, 0.25);
+}
+
+.status-pill.inactive .status-dot {
+  background-color: #666666;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Three-Dot Menu Wrapper */
+.action-menu-container {
+  position: relative;
+}
+
+.btn-three-dots {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #888888;
+  border-radius: 6px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-three-dots:hover,
+.btn-three-dots.active {
+  color: #ffffff;
+  background-color: #1a1a1a;
+  border-color: #282828;
+}
+
+/* Dropdown Menu */
+.action-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: #141414;
+  border: 1px solid #282828;
+  border-radius: 8px;
+  min-width: 175px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.85);
+  display: none;
+  flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+  padding: 4px;
+}
+
+.action-dropdown-menu.show {
+  display: flex;
+}
+
+.menu-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #dddddd;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 14px;
+  text-align: left;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.menu-item-btn:hover {
+  background-color: #202020;
+  color: #ffffff;
+}
+
+.menu-item-btn.item-danger {
+  color: var(--status-danger);
+}
+
+.menu-item-btn.item-danger:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ff6b6b;
+}
+
+.menu-item-btn svg {
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   4. Empty State
+   ========================================================================== */
+.empty-havens-card {
+  background-color: transparent;
+  border: 1px dashed var(--border-subdued);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon {
+  color: #555555;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #cccccc;
+  margin: 0 0 6px 0;
+}
+
+.empty-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 440px;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   5. Create & Edit Safe Haven Modal
+   ========================================================================== */
+.haven-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.haven-modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.haven-modal-card {
+  background: #0f0f0f;
+  border: 1px solid #242424;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95);
+  box-sizing: border-box;
+  padding: 32px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.haven-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #1c1c1c;
+}
+
+.haven-modal-title {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  line-height: 1.1;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.haven-modal-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.btn-modal-close {
+  background: transparent;
+  border: none;
+  color: #777777;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0 4px;
+}
+
+.btn-modal-close:hover {
+  color: #ffffff;
+}
+
+/* Modal Form Controls */
+.haven-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modal-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modal-label {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #aaaaaa;
+}
+
+.modal-input,
+.modal-textarea {
+  width: 100%;
+  background-color: var(--surface-input);
+  border: 1px solid #282828;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.modal-input:focus,
+.modal-textarea:focus {
+  outline: none;
+  border-color: var(--accent-beacon);
+  box-shadow: 0 0 0 3px rgba(255, 157, 66, 0.15);
+  background-color: #181818;
+}
+
+.modal-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.modal-helper {
+  font-size: 11.5px;
+  color: #777777;
+  margin-top: 2px;
+}
+
+.modal-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.modal-checkbox-row input[type="checkbox"] {
+  accent-color: var(--accent-beacon);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.modal-checkbox-row label {
+  font-size: 13.5px;
+  color: #dddddd;
+  cursor: pointer;
+}
+
+.modal-actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #1c1c1c;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 768px) {
+  .manage-title {
+    font-size: 2.4rem;
+  }
+
+  .map-section-wrapper {
+    height: 300px;
+  }
+
+  .toolbar-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-wrapper {
+    max-width: 100%;
+  }
+
+  .btn-create-haven {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .haven-row-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .haven-right-controls {
+    width: 100%;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .modal-form-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -11,14 +11,18 @@ class SafeHavenForm(forms.ModelForm):
         'barangay',
         'city',
         'province',
+        'latitude',
+        'longitude',
         'safe_phrase',
         'special_instructions',
+        'is_active',
     ]
     widgets = {
         'name': forms.TextInput(
             attrs={
                 'class': 'form-control',
                 'placeholder': 'e.g., Shell Station - Main St.',
+                'required': 'required',
             }
         ),
         'barangay': forms.TextInput(
@@ -30,10 +34,16 @@ class SafeHavenForm(forms.ModelForm):
         'province': forms.TextInput(
             attrs={'class': 'form-control', 'placeholder': 'e.g., Cebu'}
         ),
+        'latitude': forms.NumberInput(
+            attrs={'class': 'form-control', 'placeholder': 'e.g., 10.3235', 'step': 'any'}
+        ),
+        'longitude': forms.NumberInput(
+            attrs={'class': 'form-control', 'placeholder': 'e.g., 123.8821', 'step': 'any'}
+        ),
         'safe_phrase': forms.TextInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'e.g., I need a lighthouse',
+                'placeholder': 'e.g., "I need a lighthouse"',
             }
         ),
         'special_instructions': forms.Textarea(
@@ -45,6 +55,7 @@ class SafeHavenForm(forms.ModelForm):
                 ),
             }
         ),
+        'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
     }
 
 

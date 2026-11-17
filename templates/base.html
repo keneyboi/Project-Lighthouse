@@ -33,9 +33,12 @@
         {% if user.is_authenticated %}
           <a href="{% url 'show_home' %}">dashboard</a>
         {% else %}
-          <a href="{% url 'login' %}">Login</a>
+          <a href="{% url 'login' %}">login</a>
         {% endif %}
       </li>
+      {% if not user.is_authenticated %}
+        <li><a href="{% url 'register' %}">register</a></li>
+      {% endif %}
     </ul>
 
     <a href="https://www.google.com" class="quick-exit-btn">Quick Exit (Esc)</a>
@@ -82,7 +85,7 @@
       <div class="footer-col">
         <h4>Partners</h4>
         <ul>
-          <li><a href="#">Register a Safe Haven</a></li>
+          <li><a href="{% url 'register' %}">Register a Safe Haven</a></li>
           <li><a href="#">Staff Verification Protocol</a></li>
           <li><a href="#">Barangay Desk Portal</a></li>
           <li><a href="#">Community Network Login</a></li>

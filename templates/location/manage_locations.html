@@ -1,0 +1,694 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <!-- Manage Locations Page CSS -->
+  <link rel="stylesheet" href="{% static 'css/location/manage_locations.css' %}">
+{% endblock %}
+
+{% block dashboard_content %}
+<header class="manage-havens-header">
+  <h1 class="manage-title">Safe Havens</h1>
+  <p class="manage-subtitle">Operational overview and physical sanctuary management for {{ profile.organization_name|default:user.username }}.</p>
+</header>
+
+<!-- ========================================================================
+     1. Interactive Map Section (Top)
+     ======================================================================== -->
+<section class="map-section-wrapper" aria-label="Registered Safe Havens Map">
+  <div id="dashboard-map" class="dashboard-map-canvas"></div>
+</section>
+
+<!-- ========================================================================
+     2. Action & Filter Bar (Middle)
+     ======================================================================== -->
+<section class="toolbar-section">
+  <!-- Real-time Search Input -->
+  <div class="search-input-wrapper">
+    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input 
+      type="text" 
+      id="location-search-input" 
+      class="sh-filter-input" 
+      placeholder="Filter safe havens by name, city, or barangay..." 
+      aria-label="Filter safe havens"
+    >
+  </div>
+
+  <!-- Primary Create CTA -->
+  <button type="button" class="btn-create-haven" id="btn-open-create">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+    <span>+ Create Safe Haven</span>
+  </button>
+</section>
+
+<!-- ========================================================================
+     3. Registered Safe Havens List (Bottom)
+     ======================================================================== -->
+<section class="havens-list-container" id="havens-list-container" aria-label="Registered Locations List">
+  {% for haven in havens %}
+    <div 
+      class="haven-row-card {% if not haven.is_active %}is-inactive{% endif %}" 
+      id="haven-card-{{ haven.id }}"
+      data-id="{{ haven.id }}"
+      data-name="{{ haven.name|lower }}"
+      data-address="{{ haven.address|lower }}"
+      data-city="{{ haven.city|lower }}"
+      data-barangay="{{ haven.barangay|lower }}"
+      data-active="{{ haven.is_active|yesno:'true,false' }}"
+      data-lat="{{ haven.latitude }}"
+      data-lon="{{ haven.longitude }}"
+    >
+      <!-- Left: Title, Address, and Verification Phrase snippet -->
+      <div class="haven-left-info">
+        <h3 class="haven-row-title">{{ haven.name }}</h3>
+        <p class="haven-row-location">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span>{{ haven.address }}</span>
+        </p>
+        {% if haven.safe_phrase %}
+          <div class="haven-row-meta">
+            <span>Code: <span class="phrase-snippet">"{{ haven.safe_phrase }}"</span></span>
+            <span>&bull;</span>
+            <span>Helped: <strong>{{ haven.people_helped }}</strong></span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Right: Status Badge & Three-Dot Dropdown -->
+      <div class="haven-right-controls">
+        <div class="status-pill {% if haven.is_active %}active{% else %}inactive{% endif %}" id="status-pill-{{ haven.id }}">
+          <span class="status-dot"></span>
+          <span class="status-text">{% if haven.is_active %}ACTIVE{% else %}INACTIVE{% endif %}</span>
+        </div>
+
+        <!-- Three-Dot Action Menu -->
+        <div class="action-menu-container">
+          <button 
+            type="button" 
+            class="btn-three-dots" 
+            aria-label="Actions for {{ haven.name }}" 
+            data-haven-id="{{ haven.id }}"
+            title="Manage options"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="12" cy="5" r="1"></circle>
+              <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+          </button>
+
+          <!-- Dropdown Options -->
+          <div class="action-dropdown-menu" id="dropdown-menu-{{ haven.id }}">
+            <!-- Edit -->
+            <button type="button" class="menu-item-btn btn-edit-haven" data-haven-id="{{ haven.id }}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Edit Details</span>
+            </button>
+
+            <!-- Toggle Active / Inactive -->
+            <button type="button" class="menu-item-btn btn-toggle-status" data-haven-id="{{ haven.id }}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                <line x1="12" y1="2" x2="12" y2="12"></line>
+              </svg>
+              <span id="toggle-label-{{ haven.id }}">
+                {% if haven.is_active %}Mark Inactive{% else %}Mark Active{% endif %}
+              </span>
+            </button>
+
+            <!-- Delete -->
+            <button type="button" class="menu-item-btn item-danger btn-delete-haven" data-haven-id="{{ haven.id }}" data-haven-name="{{ haven.name }}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Delete Haven</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="empty-havens-card" id="empty-state-card">
+      <svg class="empty-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      <h3 class="empty-title">No Safe Havens registered yet</h3>
+      <p class="empty-desc">Create your first physical safe haven sanctuary to initialize the local protection network and receive discreet pings.</p>
+      <button type="button" class="btn-primary" id="btn-empty-create">+ Register First Safe Haven</button>
+    </div>
+  {% endfor %}
+
+  <!-- Search Filter Empty Notice (Shown dynamically when search matches nothing) -->
+  <div class="empty-havens-card" id="search-empty-state" style="display: none;">
+    <svg class="empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <h3 class="empty-title">No matching safe havens</h3>
+    <p class="empty-desc">No registered sanctuaries match the current query. Try searching another keyword or clear the search filter.</p>
+  </div>
+</section>
+
+<!-- ========================================================================
+     4. Create / Edit Safe Haven Modal
+     ======================================================================== -->
+<div class="haven-modal-backdrop" id="haven-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-haven-title">
+  <div class="haven-modal-card">
+    <div class="haven-modal-header">
+      <div>
+        <h3 class="haven-modal-title" id="modal-haven-title">Register Safe Haven</h3>
+        <p class="haven-modal-subtitle" id="modal-haven-subtitle">Add a physical location branch to shelter individuals in immediate vulnerability.</p>
+      </div>
+      <button type="button" class="btn-modal-close" id="btn-close-modal" aria-label="Close modal">&times;</button>
+    </div>
+
+    <form id="haven-form" class="haven-modal-form" method="POST" action="{% url 'create_location' %}">
+      {% csrf_token %}
+      <input type="hidden" id="haven-id-input" name="haven_id" value="">
+
+      <!-- Haven Name -->
+      <div class="modal-form-group">
+        <label for="id_name" class="modal-label">Safe Haven Name *</label>
+        <input type="text" id="id_name" name="name" class="modal-input" placeholder="e.g. Guadalupe Community Desk" required>
+      </div>
+
+      <!-- Address breakdown -->
+      <div class="modal-form-row">
+        <div class="modal-form-group">
+          <label for="id_barangay" class="modal-label">Barangay</label>
+          <input type="text" id="id_barangay" name="barangay" class="modal-input" placeholder="e.g. Guadalupe">
+        </div>
+        <div class="modal-form-group">
+          <label for="id_city" class="modal-label">City / Municipality</label>
+          <input type="text" id="id_city" name="city" class="modal-input" placeholder="e.g. Cebu City">
+        </div>
+      </div>
+
+      <div class="modal-form-row">
+        <div class="modal-form-group">
+          <label for="id_province" class="modal-label">Province</label>
+          <input type="text" id="id_province" name="province" class="modal-input" placeholder="e.g. Cebu">
+        </div>
+        <div class="modal-form-group">
+          <label class="modal-label">Coordinates</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="number" step="any" id="id_latitude" name="latitude" class="modal-input" placeholder="Latitude (e.g. 10.3235)">
+            <input type="number" step="any" id="id_longitude" name="longitude" class="modal-input" placeholder="Longitude (e.g. 123.8821)">
+          </div>
+          <span class="modal-helper">Click map anytime to pick coordinates or leave default</span>
+        </div>
+      </div>
+
+      <!-- Safe Verification Phrase -->
+      <div class="modal-form-group">
+        <label for="id_safe_phrase" class="modal-label">Secret Verification Phrase</label>
+        <input type="text" id="id_safe_phrase" name="safe_phrase" class="modal-input" placeholder='e.g. "Looking for Dr. Evelyn'\''s book"'>
+        <span class="modal-helper">Code phrase spoken quietly by survivors to signal distress to your staff.</span>
+      </div>
+
+      <!-- Special Instructions / Protocols -->
+      <div class="modal-form-group">
+        <label for="id_special_instructions" class="modal-label">Staff Instructions / Intake Protocol</label>
+        <textarea id="id_special_instructions" name="special_instructions" class="modal-textarea" placeholder="Instructions for personnel upon phrase verification (e.g. escort behind partition, provide taxi voucher)..."></textarea>
+      </div>
+
+      <!-- Active Status Checkbox -->
+      <div class="modal-checkbox-row">
+        <input type="checkbox" id="id_is_active" name="is_active" checked>
+        <label for="id_is_active">Safe Haven is currently active and open for emergency reception</label>
+      </div>
+
+      <div class="modal-actions-bar">
+        <button type="button" class="btn-secondary" id="btn-cancel-modal">Cancel</button>
+        <button type="submit" class="btn-primary" id="btn-save-haven">Save Location</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<!-- Embedded Initial Havens Data -->
+{{ havens_data|json_script:"havens-data" }}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Parse Initial Haven Data safely
+    const rawDataScript = document.getElementById('havens-data');
+    let havenList = [];
+    if (rawDataScript && rawDataScript.textContent) {
+      try {
+        let parsed = JSON.parse(rawDataScript.textContent);
+        if (typeof parsed === 'string') {
+          parsed = JSON.parse(parsed);
+        }
+        havenList = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('Error parsing havens data:', e);
+        havenList = [];
+      }
+    }
+
+    // Map & Layers State
+    let map = null;
+    let markerLayer = null;
+    let markersMap = new Map(); // haven.id -> Leaflet Marker
+    let activeDropdownMenu = null;
+
+    // DOM Elements
+    const searchInput = document.getElementById('location-search-input');
+    const havensContainer = document.getElementById('havens-list-container');
+    const searchEmptyState = document.getElementById('search-empty-state');
+    const btnOpenCreate = document.getElementById('btn-open-create');
+    const btnEmptyCreate = document.getElementById('btn-empty-create');
+    const modalBackdrop = document.getElementById('haven-modal-backdrop');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    const btnCancelModal = document.getElementById('btn-cancel-modal');
+    const havenForm = document.getElementById('haven-form');
+    const modalTitle = document.getElementById('modal-haven-title');
+    const modalSubtitle = document.getElementById('modal-haven-subtitle');
+    const havenIdInput = document.getElementById('haven-id-input');
+
+    // Default center (Cebu City or first haven)
+    let defaultLat = 10.3300;
+    let defaultLon = 123.8900;
+    if (havenList.length > 0 && havenList[0].latitude && havenList[0].longitude) {
+      defaultLat = havenList[0].latitude;
+      defaultLon = havenList[0].longitude;
+    }
+
+    // 2. Initialize Leaflet Map
+    map = L.map('dashboard-map', {
+      zoomControl: false
+    }).setView([defaultLat, defaultLon], 13);
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    markerLayer = L.layerGroup().addTo(map);
+
+    setTimeout(() => { map.invalidateSize(); }, 250);
+
+    // Map click listener: auto-populates coordinates in modal when open
+    map.on('click', function(e) {
+      if (modalBackdrop.classList.contains('active')) {
+        document.getElementById('id_latitude').value = e.latlng.lat.toFixed(6);
+        document.getElementById('id_longitude').value = e.latlng.lng.toFixed(6);
+      }
+    });
+
+    // 3. Render Custom Map Markers
+    function renderMapMarkers(list) {
+      markerLayer.clearLayers();
+      markersMap.clear();
+
+      const validPoints = [];
+
+      list.forEach((haven, idx) => {
+        const lat = parseFloat(haven.latitude);
+        const lon = parseFloat(haven.longitude);
+
+        if (isNaN(lat) || isNaN(lon) || (lat === 0 && lon === 0)) {
+          return;
+        }
+
+        validPoints.push([lat, lon]);
+
+        const pinClass = haven.is_active ? 'active-pin' : 'inactive-pin';
+        const customIcon = L.divIcon({
+          className: `sh-manage-pin ${pinClass}`,
+          html: `<div class="pin-inner" id="map-pin-${haven.id}"><span>${idx + 1}</span></div>`,
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
+        });
+
+        const marker = L.marker([lat, lon], { icon: customIcon }).addTo(markerLayer);
+
+        const statusClass = haven.is_active ? 'active' : 'inactive';
+        const statusText = haven.is_active ? 'Active' : 'Inactive';
+
+        const popupHtml = `
+          <div>
+            <h4 class="popup-haven-title">${haven.name}</h4>
+            <p class="popup-haven-meta">${haven.address}</p>
+            <span class="popup-badge ${statusClass}">${statusText}</span>
+          </div>
+        `;
+        marker.bindPopup(popupHtml);
+
+        // Hover & click linkage with list card
+        marker.on('click', () => {
+          highlightListCard(haven.id);
+        });
+
+        markersMap.set(haven.id, marker);
+      });
+
+      // Fit bounds if we have valid points
+      if (validPoints.length > 1) {
+        map.fitBounds(validPoints, { padding: [50, 50], maxZoom: 15 });
+      } else if (validPoints.length === 1) {
+        map.setView(validPoints[0], 14);
+      }
+    }
+
+    renderMapMarkers(havenList);
+
+    function highlightListCard(havenId) {
+      const card = document.getElementById(`haven-card-${havenId}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        card.style.borderColor = 'rgba(255, 157, 66, 0.8)';
+        setTimeout(() => {
+          card.style.borderColor = '';
+        }, 1800);
+      }
+    }
+
+    // 4. Real-time Search & Filter Toolbar
+    searchInput.addEventListener('input', function() {
+      const query = this.value.trim().toLowerCase();
+      const cards = havensContainer.querySelectorAll('.haven-row-card');
+      let visibleCount = 0;
+      const filteredHavens = [];
+
+      cards.forEach(card => {
+        const name = card.dataset.name || '';
+        const addr = card.dataset.address || '';
+        const city = card.dataset.city || '';
+        const bgy = card.dataset.barangay || '';
+        const id = parseInt(card.dataset.id, 10);
+
+        const matches = name.includes(query) || addr.includes(query) || city.includes(query) || bgy.includes(query);
+
+        if (matches) {
+          card.style.display = 'flex';
+          visibleCount++;
+          const matchedItem = havenList.find(h => h.id === id);
+          if (matchedItem) filteredHavens.push(matchedItem);
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Toggle search empty notice
+      if (searchEmptyState) {
+        searchEmptyState.style.display = (visibleCount === 0 && cards.length > 0) ? 'flex' : 'none';
+      }
+
+      // Update map markers according to filtered results
+      renderMapMarkers(filteredHavens);
+    });
+
+    // 5. Three-Dot Action Menus
+    document.addEventListener('click', function(e) {
+      const trigger = e.target.closest('.btn-three-dots');
+      if (trigger) {
+        e.stopPropagation();
+        const havenId = trigger.dataset.havenId;
+        const menu = document.getElementById(`dropdown-menu-${havenId}`);
+
+        // Close any other open menu
+        if (activeDropdownMenu && activeDropdownMenu !== menu) {
+          activeDropdownMenu.classList.remove('show');
+        }
+
+        if (menu) {
+          menu.classList.toggle('show');
+          trigger.classList.toggle('active', menu.classList.contains('show'));
+          activeDropdownMenu = menu.classList.contains('show') ? menu : null;
+        }
+        return;
+      }
+
+      // Close dropdown if clicked outside
+      if (activeDropdownMenu && !e.target.closest('.action-dropdown-menu')) {
+        activeDropdownMenu.classList.remove('show');
+        document.querySelectorAll('.btn-three-dots').forEach(btn => btn.classList.remove('active'));
+        activeDropdownMenu = null;
+      }
+    });
+
+    // 6. Action: Dynamic Status Toggle
+    document.addEventListener('click', function(e) {
+      const toggleBtn = e.target.closest('.btn-toggle-status');
+      if (!toggleBtn) return;
+      e.stopPropagation();
+
+      const havenId = toggleBtn.dataset.havenId;
+      toggleHavenStatus(havenId);
+    });
+
+    function toggleHavenStatus(havenId) {
+      const card = document.getElementById(`haven-card-${havenId}`);
+      const pill = document.getElementById(`status-pill-${havenId}`);
+      const toggleLabel = document.getElementById(`toggle-label-${havenId}`);
+
+      // Optimistic UI or AJAX call
+      fetch(`/location/update-status/${havenId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCsrfToken(),
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const isActive = data.is_active;
+
+          // Update data object
+          const item = havenList.find(h => h.id === parseInt(havenId, 10));
+          if (item) item.is_active = isActive;
+
+          // Update Card Classes & Badge
+          if (card) {
+            card.classList.toggle('is-inactive', !isActive);
+            card.dataset.active = isActive ? 'true' : 'false';
+          }
+
+          if (pill) {
+            pill.className = `status-pill ${isActive ? 'active' : 'inactive'}`;
+            pill.querySelector('.status-text').textContent = isActive ? 'ACTIVE' : 'INACTIVE';
+          }
+
+          if (toggleLabel) {
+            toggleLabel.textContent = isActive ? 'Mark Inactive' : 'Mark Active';
+          }
+
+          // Update Map Marker
+          const marker = markersMap.get(parseInt(havenId, 10));
+          if (marker) {
+            const pinEl = document.getElementById(`map-pin-${havenId}`);
+            if (pinEl && pinEl.parentElement) {
+              pinEl.parentElement.className = `sh-manage-pin ${isActive ? 'active-pin' : 'inactive-pin'}`;
+            }
+          }
+
+          // Close dropdown
+          if (activeDropdownMenu) {
+            activeDropdownMenu.classList.remove('show');
+            activeDropdownMenu = null;
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Status toggle error:', err);
+      });
+    }
+
+    // 7. Action: Delete Safe Haven
+    document.addEventListener('click', function(e) {
+      const deleteBtn = e.target.closest('.btn-delete-haven');
+      if (!deleteBtn) return;
+      e.stopPropagation();
+
+      const havenId = deleteBtn.dataset.havenId;
+      const havenName = deleteBtn.dataset.havenName || 'this location';
+
+      const confirmed = window.confirm(`Are you sure you want to delete "${havenName}"?\n\nThis safe haven will be removed from your active network.`);
+      if (!confirmed) return;
+
+      fetch(`/location/delete/${havenId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCsrfToken(),
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // Remove card from DOM
+          const card = document.getElementById(`haven-card-${havenId}`);
+          if (card) {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(10px)';
+            setTimeout(() => card.remove(), 250);
+          }
+
+          // Remove from local array
+          havenList = havenList.filter(h => h.id !== parseInt(havenId, 10));
+
+          // Remove marker from map
+          const marker = markersMap.get(parseInt(havenId, 10));
+          if (marker) {
+            markerLayer.removeLayer(marker);
+            markersMap.delete(parseInt(havenId, 10));
+          }
+
+          // If no cards left, show empty state
+          if (havenList.length === 0) {
+            setTimeout(() => location.reload(), 400);
+          }
+        }
+      })
+      .catch(err => console.error('Delete error:', err));
+    });
+
+    // 8. Action: Edit Safe Haven (Open Modal Pre-filled)
+    document.addEventListener('click', function(e) {
+      const editBtn = e.target.closest('.btn-edit-haven');
+      if (!editBtn) return;
+      e.stopPropagation();
+
+      const havenId = editBtn.dataset.havenId;
+      openEditModal(havenId);
+    });
+
+    function openEditModal(havenId) {
+      const item = havenList.find(h => h.id === parseInt(havenId, 10));
+      if (!item) return;
+
+      modalTitle.textContent = 'Edit Safe Haven';
+      modalSubtitle.textContent = `Update details and protocols for ${item.name}.`;
+      havenIdInput.value = item.id;
+
+      havenForm.action = `/location/edit/${item.id}/`;
+
+      document.getElementById('id_name').value = item.name || '';
+      document.getElementById('id_barangay').value = item.barangay || '';
+      document.getElementById('id_city').value = item.city || '';
+      document.getElementById('id_province').value = item.province || '';
+      document.getElementById('id_latitude').value = item.latitude || '';
+      document.getElementById('id_longitude').value = item.longitude || '';
+      document.getElementById('id_safe_phrase').value = item.safe_phrase || '';
+      document.getElementById('id_special_instructions').value = item.special_instructions || '';
+      document.getElementById('id_is_active').checked = item.is_active;
+
+      // Close dropdown
+      if (activeDropdownMenu) {
+        activeDropdownMenu.classList.remove('show');
+        activeDropdownMenu = null;
+      }
+
+      modalBackdrop.classList.add('active');
+    }
+
+    // 9. Open Create Modal
+    function openCreateModal() {
+      modalTitle.textContent = 'Register Safe Haven';
+      modalSubtitle.textContent = 'Add a physical location branch to shelter individuals in immediate vulnerability.';
+      havenIdInput.value = '';
+      havenForm.action = '{% url "create_location" %}';
+      havenForm.reset();
+      document.getElementById('id_is_active').checked = true;
+
+      // Prefill with map center as convenient starting point if map is ready
+      if (map && typeof map.getCenter === 'function') {
+        try {
+          const center = map.getCenter();
+          document.getElementById('id_latitude').value = center.lat.toFixed(6);
+          document.getElementById('id_longitude').value = center.lng.toFixed(6);
+        } catch (e) {}
+      }
+
+      modalBackdrop.classList.add('active');
+    }
+
+    if (btnOpenCreate) btnOpenCreate.addEventListener('click', openCreateModal);
+    if (btnEmptyCreate) btnEmptyCreate.addEventListener('click', openCreateModal);
+
+    function closeModal() {
+      modalBackdrop.classList.remove('active');
+    }
+
+    btnCloseModal.addEventListener('click', closeModal);
+    btnCancelModal.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', function(e) {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    // Form submission via AJAX with immediate reload/feedback
+    havenForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById('btn-save-haven');
+      const originalText = saveBtn.textContent;
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      const formData = new FormData(havenForm);
+      const url = havenForm.action;
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalText;
+        if (data.success) {
+          closeModal();
+          location.reload();
+        } else {
+          alert(data.error || 'Failed to save safe haven.');
+        }
+      })
+      .catch(err => {
+        console.error('Submit error:', err);
+        // Fallback to normal post
+        havenForm.submit();
+      });
+    });
+
+    // Helper: CSRF token
+    function getCsrfToken() {
+      const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+      return csrfInput ? csrfInput.value : '';
+    }
+  });
+</script>
+{% endblock %}
