@@ -510,10 +510,26 @@
 .sh-card-addr {
     font-size: 0.85rem;
     color: #666666;
-    margin: 0 0 14px 0;
+    margin: 0 0 8px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.sh-card-phrase {
+    font-size: 0.8rem;
+    color: #555555;
+    margin: 0 0 12px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sh-card-phrase em {
+    font-family: 'Serif-regular', serif;
+    font-style: italic;
+    color: #c2610d;
+    font-weight: 600;
 }
 
 .sh-card-footer {

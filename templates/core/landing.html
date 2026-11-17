@@ -182,6 +182,9 @@
       <!-- Instructions & Details -->
       <div class="sh-meta-details">
         <div class="sh-meta-row">
+          <strong>Organization:</strong> <span id="modal-org">Cebu Safe Sanctuary Network</span>
+        </div>
+        <div class="sh-meta-row">
           <strong>Operating Hours:</strong> <span id="modal-time">Open 24/7</span>
         </div>
         <div class="sh-meta-row">
@@ -189,6 +192,9 @@
         </div>
         <div class="sh-meta-row">
           <strong>Staff Protocol:</strong> <span id="modal-protocol">Standard quiet check-in protocol active.</span>
+        </div>
+        <div class="sh-meta-row">
+          <strong>People Helped:</strong> <span id="modal-helped">0 individuals assisted</span>
         </div>
       </div>
     </div>
@@ -268,6 +274,8 @@
   </div>
 </div>
 
+{{ havens_data|json_script:"initial-havens-data" }}
+
 <!-- Leaflet JS (CSS is cleanly imported in extra_css) -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
@@ -322,6 +330,8 @@
     const modalTime = document.getElementById('modal-time');
     const modalPhone = document.getElementById('modal-phone');
     const modalProtocol = document.getElementById('modal-protocol');
+    const modalOrg = document.getElementById('modal-org');
+    const modalHelped = document.getElementById('modal-helped');
     const modalBadge = document.getElementById('modal-badge');
     const modalTags = document.querySelectorAll('#modal-tags .sh-tag');
 
@@ -420,7 +430,25 @@
       userLocationMarker.bindPopup(`<b>${label}</b><br><small>Discreet sanctuary search center</small>`);
     }
 
-    // Render Sanctuaries into Carousel & Map from GeoJSON Features
+    // Fit map bounds to encompass all plotted sanctuaries
+    function fitMapToSanctuaries(features) {
+      if (!features || features.length === 0) return;
+      const validPoints = features
+        .map(f => {
+          const coords = f.geometry ? f.geometry.coordinates : [f.longitude, f.latitude];
+          return [coords[1], coords[0]]; // [lat, lon]
+        })
+        .filter(pt => pt[0] && pt[1] && (pt[0] !== 0 || pt[1] !== 0));
+
+      if (validPoints.length === 1) {
+        map.setView(validPoints[0], 14);
+      } else if (validPoints.length > 1) {
+        const bounds = L.latLngBounds(validPoints);
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+      }
+    }
+
+    // Render Sanctuaries into Carousel & Map from GeoJSON Features or objects
     function renderSanctuaries(features) {
       currentSanctuaryList = features;
       track.innerHTML = '';
@@ -430,7 +458,7 @@
       if (!features || features.length === 0) {
         track.innerHTML = `
           <div style="padding: 24px; color: #888888; font-size: 13px; text-align: center; width: 100%;">
-            No verified safe havens found for this location. National Lifeline: <a href="tel:911" style="color: #ff9d42; text-decoration: underline;">911</a> or VAWC <a href="tel:1343" style="color: #ff9d42; text-decoration: underline;">1343</a>.
+            No active safe havens found for this location. National Lifeline: <a href="tel:911" style="color: #ff9d42; text-decoration: underline;">911</a> or VAWC <a href="tel:1343" style="color: #ff9d42; text-decoration: underline;">1343</a>.
           </div>
         `;
         updateCarouselUI(0);
@@ -438,8 +466,8 @@
       }
 
       features.forEach((feature, idx) => {
-        const haven = feature.properties;
-        const coords = feature.geometry.coordinates; // [lon, lat]
+        const haven = feature.properties || feature;
+        const coords = feature.geometry ? feature.geometry.coordinates : [haven.longitude, haven.latitude]; // [lon, lat]
         const havenLon = coords[0];
         const havenLat = coords[1];
 
@@ -452,20 +480,25 @@
         });
 
         const marker = L.marker([havenLat, havenLon], { icon: customIcon }).addTo(sanctuaryLayer);
-        marker.bindPopup(`<b>${haven.name}</b><br>${haven.address}<br><em>${haven.distance_text || ''}</em>`);
+        const orgSub = haven.organization_name ? `<br><small style="color: #888;">${haven.organization_name}</small>` : '';
+        marker.bindPopup(`<b>${haven.name}</b>${orgSub}<br>${haven.address}<br><em>${haven.distance_text || ''}</em>`);
         markerMap.set(haven.id, marker);
 
         // Carousel Card
         const card = document.createElement('div');
         card.className = 'sh-haven-card';
         card.dataset.id = haven.id;
+        const phraseDisplay = haven.safe_phrase ? `"${haven.safe_phrase}"` : 'Code on file';
+        const distOrOrg = haven.distance_text || haven.organization_name || 'Active Sanctuary';
+
         card.innerHTML = `
           <div class="sh-card-header">
             <span class="sh-card-num">${idx + 1}</span>
-            <span class="sh-card-dist">${haven.distance_text || 'Active Sanctuary'}</span>
+            <span class="sh-card-dist" title="${distOrOrg}">${distOrOrg}</span>
           </div>
           <h4 class="sh-card-title">${haven.name}</h4>
           <p class="sh-card-addr">${haven.address}</p>
+          <div class="sh-card-phrase">Phrase: <em>${phraseDisplay}</em></div>
           <div class="sh-card-footer">
             <span class="sh-status-pill">${haven.operating_hours || 'Open 24/7'}</span>
             <div class="sh-card-links">
@@ -513,14 +546,16 @@
 
     function openHavenDetailsModal(feature) {
       activeHavenForActions = feature;
-      const haven = feature.properties;
+      const haven = feature.properties || feature;
       modalName.textContent = haven.name;
       modalAddress.textContent = haven.address;
-      modalPhrase.textContent = haven.safe_phrase || '"Verification Code Required"';
+      modalPhrase.textContent = haven.safe_phrase ? `"${haven.safe_phrase}"` : '"Verification Code Required"';
       modalTime.textContent = haven.operating_hours || 'Open 24/7';
       modalPhone.textContent = haven.contact_phone || 'Confidential Hotline';
       modalProtocol.textContent = haven.special_instructions || 'Standard quiet check-in protocol active.';
       modalBadge.textContent = haven.verification_status === 'VERIFIED' ? 'Verified Safe Haven' : 'Active Safe Haven';
+      if (modalOrg) modalOrg.textContent = haven.organization_name || 'Project Lighthouse Network';
+      if (modalHelped) modalHelped.textContent = `${haven.people_helped || 0} individuals assisted`;
 
       btnPing.onclick = () => {
         dispatchDiscreetPing(haven.id, haven.name);
@@ -588,6 +623,9 @@
         .then(data => {
           if (data && data.features) {
             renderSanctuaries(data.features);
+            if (query) {
+              fitMapToSanctuaries(data.features);
+            }
           }
         })
         .catch(err => {
@@ -637,8 +675,8 @@
     // Stealth Route Guidance Core Logic
     function openStealthRoute(feature) {
       activeHavenForActions = feature;
-      const haven = feature.properties;
-      const destCoords = feature.geometry.coordinates; // [lon, lat]
+      const haven = feature.properties || feature;
+      const destCoords = feature.geometry ? feature.geometry.coordinates : [haven.longitude, haven.latitude]; // [lon, lat]
       const destLat = destCoords[1];
       const destLon = destCoords[0];
 
@@ -936,8 +974,34 @@
         });
     });
 
-    // Initial load: Query dynamic GeoJSON endpoint
-    fetchSafeHavens(userCoords.lat, userCoords.lon);
+    // Auto-load pre-rendered Safe Havens registered across all accounts
+    const initialHavensEl = document.getElementById('initial-havens-data');
+    let hasPreloadedHavens = false;
+    if (initialHavensEl) {
+      try {
+        const rawData = JSON.parse(initialHavensEl.textContent);
+        if (Array.isArray(rawData) && rawData.length > 0) {
+          const initialFeatures = rawData.map(h => ({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [h.longitude, h.latitude]
+            },
+            properties: h
+          }));
+          renderSanctuaries(initialFeatures);
+          fitMapToSanctuaries(initialFeatures);
+          hasPreloadedHavens = true;
+        }
+      } catch (err) {
+        console.error("Error parsing preloaded safe havens:", err);
+      }
+    }
+
+    // Refresh dynamic data with distance calculations if needed
+    if (!hasPreloadedHavens) {
+      fetchSafeHavens(userCoords.lat, userCoords.lon);
+    }
   });
 </script>
 {% endblock %}

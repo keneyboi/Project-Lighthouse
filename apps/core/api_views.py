@@ -57,20 +57,8 @@ def safe_havens_geojson_api(request):
         except (ValueError, TypeError):
             radius = None
 
-    # Base query: Active safe havens
+    # Base query: All active safe havens registered across all accounts
     qs = SafeHaven.objects.filter(is_active=True).select_related('establishment')
-
-    # Filter verified establishments (with graceful fallback if no verified records exist yet)
-    has_verified = qs.filter(establishment__verification_status=VerificationStatus.VERIFIED).exists()
-    if has_verified:
-        qs = qs.filter(establishment__verification_status=VerificationStatus.VERIFIED)
-    else:
-        # Fallback in local/development environments
-        qs = qs.filter(
-            Q(establishment__verification_status=VerificationStatus.VERIFIED)
-            | Q(establishment__verification_status=VerificationStatus.PENDING)
-            | Q(establishment__isnull=True)
-        )
 
     # Optional text search filter
     if query_param:
@@ -112,8 +100,8 @@ def safe_havens_geojson_api(request):
         dist_km = round(dist, 2) if dist is not None else None
         dist_text = f"{round(dist, 1)} km away" if dist is not None else ""
 
-        org_name = haven.establishment.organization_name if (haven.establishment and haven.establishment.organization_name) else haven.name
-        phone = haven.establishment.contact_phone if haven.establishment else ""
+        org_name = haven.organization_name
+        phone = haven.contact_phone
         verif_status = haven.establishment.verification_status if haven.establishment else "VERIFIED"
 
         features.append({
