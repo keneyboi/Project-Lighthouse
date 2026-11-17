@@ -1,3 +1,4 @@
+from decimal import Decimal, InvalidOperation
 from apps.core.models import EstablishmentProfile, SafeHaven
 from apps.location.forms import SafeHavenForm
 from django.contrib import messages
@@ -16,13 +17,18 @@ def add_location_view(request):
             safe_haven = form.save(commit=False)
             safe_haven.establishment = profile
 
-        if request.POST.get('latitude') and request.POST.get('longitude'):
-            safe_haven.latitude = request.POST.get('latitude')
-            safe_haven.longitude = request.POST.get('longitude')
+            lat = request.POST.get('latitude')
+            lon = request.POST.get('longitude')
+            if lat and lon:
+                try:
+                    safe_haven.latitude = Decimal(lat)
+                    safe_haven.longitude = Decimal(lon)
+                except (ValueError, InvalidOperation):
+                    pass
 
-        safe_haven.save()
-        messages.success(request, 'Safe Haven location successfully created.')
-        return redirect('show_home')
+            safe_haven.save()
+            messages.success(request, 'Safe Haven location successfully created.')
+            return redirect('show_home')
     else:
         form = SafeHavenForm()
 
@@ -33,7 +39,7 @@ def add_location_view(request):
 @require_POST
 def toggle_status_view(request, haven_id=None):
     haven = get_object_or_404(
-        SafeHaven, id=haven_id, establishment_user=request.user
+        SafeHaven, id=haven_id, establishment__user=request.user
     )
 
     haven.is_active = not haven.is_active

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'apps.login',
     'apps.register',
     'apps.user_settings',
+    'apps.user_profile',
     'apps.location',
 ]
 

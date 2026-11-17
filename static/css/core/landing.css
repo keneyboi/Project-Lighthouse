@@ -794,3 +794,506 @@
         -webkit-overflow-scrolling: touch;
     }
 }
+
+/* ==========================================================================
+   Near Me Button & Controls Group
+   ========================================================================== */
+.sh-controls-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.sh-near-me-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #141414;
+    color: #f0f0f0;
+    border: 1px solid #282828;
+    border-radius: 6px;
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'SF Pro Display', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.sh-near-me-btn:hover {
+    background-color: #1f1f1f;
+    border-color: rgba(255, 157, 66, 0.4);
+    color: #ff9d42;
+}
+
+.sh-near-me-btn.locating {
+    opacity: 0.7;
+    pointer-events: none;
+    background-color: #1a1a1a;
+}
+
+.sh-near-me-btn.locating .near-me-icon {
+    animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* User Location Map Marker */
+.user-pulse-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-pulse-dot {
+    width: 14px;
+    height: 14px;
+    background: #ff9d42;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 10px rgba(255, 157, 66, 0.8);
+    position: relative;
+}
+
+.user-pulse-ring {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 157, 66, 0.6);
+    animation: userPulse 2s ease-out infinite;
+}
+
+@keyframes userPulse {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Card stealth route trigger link */
+.sh-card-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sh-route-btn {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff9d42;
+    background: rgba(255, 157, 66, 0.12);
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sh-route-btn:hover {
+    background: rgba(255, 157, 66, 0.25);
+}
+
+/* ==========================================================================
+   Stealth Route Guidance Drawer & Overlay
+   ========================================================================== */
+.stealth-route-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.stealth-route-drawer.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.stealth-drawer-inner {
+    background: #0b0b0b;
+    border: 1px solid #1f1f1f;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95);
+    transition: all 0.3s ease;
+}
+
+/* Header Area */
+.stealth-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 28px 18px 28px;
+    border-bottom: 1px solid #191919;
+    gap: 16px;
+}
+
+.stealth-header-left {
+    flex: 1;
+}
+
+.stealth-mode-badge {
+    font-family: 'Doto', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ff9d42;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.stealth-title {
+    font-family: 'Serif-regular', serif;
+    font-size: 2.2rem;
+    line-height: 1.1;
+    color: #ffffff;
+    margin: 0 0 4px 0;
+}
+
+.stealth-target {
+    font-size: 0.9rem;
+    color: #888888;
+    margin: 0;
+}
+
+.stealth-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-stealth-pill {
+    background: #141414;
+    border: 1px solid #282828;
+    color: #cccccc;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    font-family: 'SF Pro Display', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-stealth-pill:hover {
+    background: #202020;
+    color: #ffffff;
+}
+
+.btn-stealth-close {
+    background: transparent;
+    border: none;
+    color: #777777;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: color 0.2s;
+}
+
+.btn-stealth-close:hover {
+    color: #ffffff;
+}
+
+/* Metrics Banner */
+.stealth-metrics-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: #111111;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 14px 28px;
+    gap: 16px;
+}
+
+.stealth-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stealth-metric .metric-label {
+    font-size: 11px;
+    color: #777777;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stealth-metric .metric-val {
+    font-family: 'Doto', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.stealth-metric .status-stealth {
+    color: #4ade80;
+    font-family: 'SF Pro Display', sans-serif;
+    font-size: 12px;
+}
+
+/* Directions List Body */
+.stealth-directions-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.stealth-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #121212;
+    border: 1px solid #1a1a1a;
+    transition: background 0.2s;
+}
+
+.stealth-step-item:hover {
+    background: #161616;
+}
+
+.step-num {
+    font-family: 'Doto', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ff9d42;
+    background: rgba(255, 157, 66, 0.12);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-instruction {
+    font-size: 13.5px;
+    color: #e0e0e0;
+    line-height: 1.45;
+    margin: 0 0 4px 0;
+}
+
+.step-subtext {
+    font-size: 11.5px;
+    color: #777777;
+    font-family: 'Doto', monospace;
+    margin: 0;
+}
+
+/* Arrival Card */
+.stealth-arrival-card {
+    background: #141414;
+    border-top: 1px solid #202020;
+    border-bottom: 1px solid #202020;
+    padding: 16px 28px;
+}
+
+.arrival-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #ff9d42;
+    margin-bottom: 6px;
+}
+
+.arrival-phrase {
+    font-family: 'Serif-regular', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.arrival-note {
+    font-size: 11.5px;
+    color: #888888;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Bottom Actions */
+.stealth-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 28px;
+    background: #0d0d0d;
+    gap: 12px;
+}
+
+/* ==========================================================================
+   Disguise Mode ("Everyday Grocery / Errand Checklist" Mask)
+   ========================================================================== */
+.stealth-route-drawer.disguise-mode .stealth-drawer-inner {
+    background: #fbfbfb;
+    border-color: #dcdcdc;
+    color: #1a1a1a;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-header {
+    background: #f4f4f4;
+    border-bottom-color: #e5e5e5;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-mode-badge {
+    color: #555555;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-title {
+    color: #111111;
+    font-family: 'SF Pro Display', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-target {
+    color: #666666;
+}
+
+.stealth-route-drawer.disguise-mode .btn-stealth-pill {
+    background: #ffffff;
+    border-color: #cccccc;
+    color: #333333;
+}
+
+.stealth-route-drawer.disguise-mode .btn-stealth-close {
+    color: #666666;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-metrics-bar {
+    background: #f0f0f0;
+    border-bottom-color: #e0e0e0;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-metric .metric-label {
+    color: #888888;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-metric .metric-val {
+    color: #111111;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-metric .status-stealth {
+    color: #333333;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-step-item {
+    background: #ffffff;
+    border-color: #e6e6e6;
+}
+
+.stealth-route-drawer.disguise-mode .step-num {
+    background: #eef2f6;
+    color: #333333;
+    border-radius: 4px;
+}
+
+.stealth-route-drawer.disguise-mode .step-instruction {
+    color: #222222;
+}
+
+.stealth-route-drawer.disguise-mode .step-subtext {
+    color: #888888;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-arrival-card {
+    background: #f7f7f7;
+    border-color: #e5e5e5;
+}
+
+.stealth-route-drawer.disguise-mode .arrival-label {
+    color: #555555;
+}
+
+.stealth-route-drawer.disguise-mode .arrival-phrase {
+    color: #222222;
+    font-family: 'SF Pro Display', sans-serif;
+    font-style: normal;
+    font-size: 1.15rem;
+}
+
+.stealth-route-drawer.disguise-mode .arrival-note {
+    color: #777777;
+}
+
+.stealth-route-drawer.disguise-mode .stealth-footer-actions {
+    background: #f0f0f0;
+}
+
+.stealth-route-drawer.disguise-mode .btn-outline-modal {
+    color: #333333;
+    border-color: #bbbbbb;
+}
+
+.stealth-route-drawer.disguise-mode .btn-primary {
+    background: #222222;
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .stealth-header {
+        flex-direction: column;
+        padding: 18px 20px 14px 20px;
+    }
+
+    .stealth-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .stealth-metrics-bar {
+        padding: 12px 20px;
+    }
+
+    .stealth-directions-list {
+        padding: 16px 20px;
+    }
+
+    .stealth-arrival-card {
+        padding: 14px 20px;
+    }
+
+    .stealth-footer-actions {
+        padding: 14px 20px;
+        flex-direction: column;
+    }
+
+    .stealth-footer-actions button {
+        width: 100%;
+    }
+}

@@ -119,5 +119,34 @@
   </div>
 </footer>
 
+<script>
+  function triggerQuickExit() {
+    try {
+      sessionStorage.clear();
+      localStorage.removeItem('active_alert');
+    } catch (e) {}
+    window.location.replace('https://www.google.com');
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const activeModal = document.querySelector('.sh-modal-backdrop.active, .stealth-route-drawer.active');
+      if (activeModal) {
+        // Handled by modal dismissal listeners
+        return;
+      }
+      triggerQuickExit();
+    }
+  });
+
+  const quickExitBtn = document.querySelector('.quick-exit-btn');
+  if (quickExitBtn) {
+    quickExitBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      triggerQuickExit();
+    });
+  }
+</script>
+
 </body>
 </html>

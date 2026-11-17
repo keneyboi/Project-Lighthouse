@@ -106,16 +106,25 @@
 <section class="safe-havens-section" id="safe-havens">
   <div class="safe-havens-topbar">
     <h2 class="sh-title">Find a safe haven.</h2>
-    <form id="location-search-form" class="sh-search-bar">
-      <input 
-        type="text" 
-        id="location-input" 
-        class="sh-location-input" 
-        placeholder="enter your location..." 
-        required
-      >
-      <button type="submit" class="sh-search-btn">Search Safe Haven</button>
-    </form>
+    <div class="sh-controls-group">
+      <form id="location-search-form" class="sh-search-bar">
+        <input 
+          type="text" 
+          id="location-input" 
+          class="sh-location-input" 
+          placeholder="enter your location or city..." 
+        >
+        <button type="submit" class="sh-search-btn">Search Safe Haven</button>
+      </form>
+      <!-- One-Tap "Near Me" Live Geolocation Button -->
+      <button type="button" id="btn-near-me" class="sh-near-me-btn" title="Find nearest sanctuary using your current location">
+        <svg class="near-me-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path>
+        </svg>
+        <span class="near-me-text">Near Me</span>
+      </button>
+    </div>
   </div>
 
   <div class="safe-havens-map-wrapper">
@@ -129,7 +138,7 @@
 
       <div class="sh-carousel-track-wrapper">
         <div class="sh-carousel-track" id="locations-list">
-          <!-- Populated via JavaScript -->
+          <!-- Populated dynamically via GeoJSON API -->
         </div>
       </div>
 
@@ -142,11 +151,11 @@
 
 <!-- Safe Haven Details & Secret Phrase Modal -->
 <div class="sh-modal-backdrop" id="sh-modal-backdrop">
-  <div class="sh-modal-dialog" role="dialog" aria-modal="true">
+  <div class="sh-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-name">
     <button class="sh-modal-close" id="sh-modal-close" aria-label="Close modal">&times;</button>
     
     <div class="sh-modal-header">
-      <span class="sh-badge-safe">Verified Safe Haven</span>
+      <span class="sh-badge-safe" id="modal-badge">Verified Safe Haven</span>
       <h3 id="modal-name">Sanctuary Name</h3>
       <p id="modal-address">Location Address</p>
     </div>
@@ -161,11 +170,12 @@
 
       <!-- Quick Context / Descriptors -->
       <div class="sh-descriptors-section">
-        <label>Pre-Defined Descriptors (Selected during ping)</label>
+        <label>Pre-Defined Descriptors (Included with ping)</label>
         <div class="sh-tag-cloud" id="modal-tags">
-          <span class="sh-tag">Immediate Safe Room</span>
-          <span class="sh-tag">Discrete Transport</span>
-          <span class="sh-tag">Private Rest Area</span>
+          <span class="sh-tag active-tag" data-tag="Immediate Safe Room">Immediate Safe Room</span>
+          <span class="sh-tag active-tag" data-tag="Discrete Transport">Discrete Transport</span>
+          <span class="sh-tag" data-tag="Private Rest Area">Private Rest Area</span>
+          <span class="sh-tag" data-tag="Unmonitored Phone">Unmonitored Phone</span>
         </div>
       </div>
 
@@ -184,9 +194,77 @@
     </div>
 
     <div class="sh-modal-actions">
-      <button class="btn-primary" id="btn-ping-shelter">Send Discreet Ping</button>
-      <button class="btn-outline-modal" id="btn-close-modal">Dismiss</button>
+      <button type="button" class="btn-primary" id="btn-ping-shelter">Send Discreet Ping</button>
+      <button type="button" class="btn-secondary" id="btn-modal-stealth-route">Stealth Route</button>
+      <button type="button" class="btn-outline-modal" id="btn-close-modal">Dismiss</button>
     </div>
+  </div>
+</div>
+
+<!-- Stealth Route Guidance Drawer / Dialog -->
+<div class="stealth-route-drawer" id="stealth-route-drawer" role="dialog" aria-modal="true" aria-labelledby="stealth-title">
+  <div class="stealth-drawer-inner">
+    
+    <!-- Header Bar with Disguise and Cover controls -->
+    <div class="stealth-header">
+      <div class="stealth-header-left">
+        <span class="stealth-mode-badge" id="stealth-status-badge">Stealth Route Mode</span>
+        <h3 class="stealth-title" id="stealth-title">Discreet Walking Guide</h3>
+        <p class="stealth-target" id="stealth-target">Destination: Sanctuary</p>
+      </div>
+      <div class="stealth-header-actions">
+        <!-- Disguise Toggle: switches UI instantly to look like an everyday grocery/errand checklist -->
+        <button type="button" id="btn-toggle-disguise" class="btn-stealth-pill" title="Disguise this screen as an everyday errand note">
+          <span class="pill-icon">👁️</span>
+          <span id="disguise-label">Disguise as Note</span>
+        </button>
+        <button type="button" id="btn-toggle-path" class="btn-stealth-pill" title="Toggle faint path trace on map">
+          <span class="pill-icon">🗺️</span>
+          <span id="path-toggle-label">Map Trace: Off</span>
+        </button>
+        <button type="button" id="btn-cover-stealth" class="btn-stealth-close" aria-label="Cover screen immediately">&times;</button>
+      </div>
+    </div>
+
+    <!-- Discreet Metrics Banner -->
+    <div class="stealth-metrics-bar">
+      <div class="stealth-metric">
+        <span class="metric-label" id="label-walk-time">Quiet Walk Time</span>
+        <span class="metric-val" id="stealth-walk-time">Calculating...</span>
+      </div>
+      <div class="stealth-metric">
+        <span class="metric-label" id="label-distance">Est. Distance</span>
+        <span class="metric-val" id="stealth-distance">--</span>
+      </div>
+      <div class="stealth-metric">
+        <span class="metric-label" id="label-discretion">Discretion Level</span>
+        <span class="metric-val status-stealth" id="stealth-discretion-status">Zero Glare Display</span>
+      </div>
+    </div>
+
+    <!-- Text-Only Step Directions Body -->
+    <div class="stealth-directions-list" id="stealth-steps-container">
+      <div class="stealth-step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <p class="step-instruction">Calculating quiet walking directions...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrival Confidential Protocol Card -->
+    <div class="stealth-arrival-card">
+      <div class="arrival-label" id="arrival-label-text">Upon Arrival: State Verification Phrase</div>
+      <div class="arrival-phrase" id="stealth-arrival-phrase">"..."</div>
+      <p class="arrival-note" id="arrival-note-text">Quietly state this code phrase to desk personnel. They will facilitate secure refuge without drawing attention.</p>
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="stealth-footer-actions">
+      <button type="button" class="btn-outline-modal" id="btn-close-stealth">Dismiss / Cover Screen (Esc)</button>
+      <button type="button" class="btn-primary" id="btn-stealth-ping">Ping This Sanctuary</button>
+    </div>
+
   </div>
 </div>
 
@@ -195,9 +273,19 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Default coordinates (Cebu City sanctuary corridor)
+    let userCoords = { lat: 10.3300, lon: 123.8900, isLive: false };
+    let currentSanctuaryList = [];
+    let activeHavenForActions = null;
+    let userLocationMarker = null;
+    let stealthRoutePolyline = null;
+    let showMapPathTrace = false;
+    let isDisguised = false;
+
+    // Initialize Leaflet Map
     const map = L.map('safe-haven-map', {
       zoomControl: false
-    }).setView([10.3300, 123.8900], 14);
+    }).setView([userCoords.lat, userCoords.lon], 14);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
@@ -206,117 +294,156 @@
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    // Invalidate size in case CSS container takes a moment to paint
+    // Invalidate size in case CSS container paints asynchronously
     setTimeout(() => { map.invalidateSize(); }, 200);
 
-    let currentMarker = null;
     let sanctuaryLayer = L.layerGroup().addTo(map);
     let markerMap = new Map();
     let currentIndex = 0;
     const cardsPerView = 3;
 
+    // DOM Elements
     const searchForm = document.getElementById('location-search-form');
     const locationInput = document.getElementById('location-input');
+    const btnNearMe = document.getElementById('btn-near-me');
     const track = document.getElementById('locations-list');
     const prevBtn = document.getElementById('carousel-prev');
     const nextBtn = document.getElementById('carousel-next');
 
-    // Modal elements
+    // Haven Modal elements
     const modalBackdrop = document.getElementById('sh-modal-backdrop');
     const modalClose = document.getElementById('sh-modal-close');
     const btnDismiss = document.getElementById('btn-close-modal');
     const btnPing = document.getElementById('btn-ping-shelter');
+    const btnModalStealth = document.getElementById('btn-modal-stealth-route');
     const modalName = document.getElementById('modal-name');
     const modalAddress = document.getElementById('modal-address');
     const modalPhrase = document.getElementById('modal-phrase');
     const modalTime = document.getElementById('modal-time');
     const modalPhone = document.getElementById('modal-phone');
     const modalProtocol = document.getElementById('modal-protocol');
+    const modalBadge = document.getElementById('modal-badge');
+    const modalTags = document.querySelectorAll('#modal-tags .sh-tag');
+
+    // Stealth Route Drawer elements
+    const stealthDrawer = document.getElementById('stealth-route-drawer');
+    const btnCoverStealth = document.getElementById('btn-cover-stealth');
+    const btnCloseStealth = document.getElementById('btn-close-stealth');
+    const btnToggleDisguise = document.getElementById('btn-toggle-disguise');
+    const btnTogglePath = document.getElementById('btn-toggle-path');
+    const disguiseLabel = document.getElementById('disguise-label');
+    const pathToggleLabel = document.getElementById('path-toggle-label');
+    const stealthTitle = document.getElementById('stealth-title');
+    const stealthTarget = document.getElementById('stealth-target');
+    const stealthStatusBadge = document.getElementById('stealth-status-badge');
+    const stealthWalkTime = document.getElementById('stealth-walk-time');
+    const stealthDistance = document.getElementById('stealth-distance');
+    const stealthStepsContainer = document.getElementById('stealth-steps-container');
+    const stealthArrivalPhrase = document.getElementById('stealth-arrival-phrase');
+    const btnStealthPing = document.getElementById('btn-stealth-ping');
+    const arrivalLabelText = document.getElementById('arrival-label-text');
+    const arrivalNoteText = document.getElementById('arrival-note-text');
+
+    // Tag selection in modal
+    modalTags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        tag.classList.toggle('active-tag');
+        if (tag.classList.contains('active-tag')) {
+          tag.style.background = 'rgba(255, 157, 66, 0.2)';
+          tag.style.borderColor = '#ff9d42';
+          tag.style.color = '#ffffff';
+        } else {
+          tag.style.background = 'rgba(255, 255, 255, 0.08)';
+          tag.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          tag.style.color = '#dddddd';
+        }
+      });
+    });
+
+    function getSelectedDescriptors() {
+      const selected = [];
+      document.querySelectorAll('#modal-tags .sh-tag.active-tag').forEach(tag => {
+        selected.push(tag.dataset.tag || tag.textContent.trim());
+      });
+      return selected;
+    }
 
     function closeModal() {
       modalBackdrop.classList.remove('active');
     }
+
+    function closeStealthDrawer() {
+      stealthDrawer.classList.remove('active');
+      if (!showMapPathTrace && stealthRoutePolyline) {
+        map.removeLayer(stealthRoutePolyline);
+        stealthRoutePolyline = null;
+      }
+    }
+
     modalClose.addEventListener('click', closeModal);
     btnDismiss.addEventListener('click', closeModal);
     modalBackdrop.addEventListener('click', (e) => {
       if (e.target === modalBackdrop) closeModal();
     });
 
+    btnCoverStealth.addEventListener('click', closeStealthDrawer);
+    btnCloseStealth.addEventListener('click', closeStealthDrawer);
+    stealthDrawer.addEventListener('click', (e) => {
+      if (e.target === stealthDrawer) closeStealthDrawer();
+    });
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
-        closeModal();
+      if (e.key === 'Escape') {
+        if (stealthDrawer.classList.contains('active')) {
+          closeStealthDrawer();
+          e.stopPropagation();
+        } else if (modalBackdrop.classList.contains('active')) {
+          closeModal();
+          e.stopPropagation();
+        }
       }
     });
 
-    const initialSanctuaries = [
-      {
-        id: 1,
-        name: "Guadalupe Community Haven",
-        address: "Labra St, Guadalupe",
-        dist: "0.4 km away",
-        time: "Open 24/7",
-        phone: "0917-234-5678",
-        lat: 10.3235,
-        lon: 123.8821,
-        phrase: '"Looking for Dr. Evelyn\'s book"',
-        protocol: "Staff will escort you immediately behind the reception partitions without requiring an ID."
-      },
-      {
-        id: 2,
-        name: "Lahug Sanctuary Desk",
-        address: "Salinas Dr, Lahug",
-        dist: "0.9 km away",
-        time: "Open 24/7",
-        phone: "0919-876-5432",
-        lat: 10.3340,
-        lon: 123.8995,
-        phrase: '"Is the blue room reserved?"',
-        protocol: "Private side office with an unmonitored rear phone booth and emergency taxi voucher."
-      },
-      {
-        id: 3,
-        name: "Banilad Quiet Haven",
-        address: "Gov. M. Cuenco Ave, Banilad",
-        dist: "1.4 km away",
-        time: "07:00 AM - 11:00 PM",
-        phone: "0920-333-8899",
-        lat: 10.3450,
-        lon: 123.9110,
-        phrase: '"Checking on the lighthouse roster"',
-        protocol: "Dedicated safe space inside back office. Trauma counselor on-call."
-      },
-      {
-        id: 4,
-        name: "Capitol Shelter Hub",
-        address: "Escario St, Capitol Site",
-        dist: "1.8 km away",
-        time: "Open 24/7",
-        phone: "0918-555-1212",
-        lat: 10.3175,
-        lon: 123.8920,
-        phrase: '"Requesting weather updates"',
-        protocol: "24-hour guarded perimeter with discrete emergency transport link."
-      },
-      {
-        id: 5,
-        name: "Apas Protection Point",
-        address: "Apas Road, IT Corridor",
-        dist: "2.3 km away",
-        time: "Open 24/7",
-        phone: "0922-999-4321",
-        lat: 10.3312,
-        lon: 123.9080,
-        phrase: '"Need quiet reading material"',
-        protocol: "Medical first-aid supplies and private family room available."
+    // Update User Location Marker on Map
+    function updateUserMarker(lat, lon, label = "Your Location") {
+      if (userLocationMarker) {
+        userLocationMarker.setLatLng([lat, lon]);
+      } else {
+        const userIcon = L.divIcon({
+          className: 'user-pulse-marker',
+          html: `<div class="user-pulse-dot"><div class="user-pulse-ring"></div></div>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
+        });
+        userLocationMarker = L.marker([lat, lon], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
       }
-    ];
+      userLocationMarker.bindPopup(`<b>${label}</b><br><small>Discreet sanctuary search center</small>`);
+    }
 
-    function renderSanctuaries(list) {
+    // Render Sanctuaries into Carousel & Map from GeoJSON Features
+    function renderSanctuaries(features) {
+      currentSanctuaryList = features;
       track.innerHTML = '';
       sanctuaryLayer.clearLayers();
       markerMap.clear();
 
-      list.forEach((haven, idx) => {
+      if (!features || features.length === 0) {
+        track.innerHTML = `
+          <div style="padding: 24px; color: #888888; font-size: 13px; text-align: center; width: 100%;">
+            No verified safe havens found for this location. National Lifeline: <a href="tel:911" style="color: #ff9d42; text-decoration: underline;">911</a> or VAWC <a href="tel:1343" style="color: #ff9d42; text-decoration: underline;">1343</a>.
+          </div>
+        `;
+        updateCarouselUI(0);
+        return;
+      }
+
+      features.forEach((feature, idx) => {
+        const haven = feature.properties;
+        const coords = feature.geometry.coordinates; // [lon, lat]
+        const havenLon = coords[0];
+        const havenLat = coords[1];
+
+        // Map pin
         const customIcon = L.divIcon({
           className: 'sh-map-pin',
           html: `<div class="pin-inner" id="pin-${haven.id}"><span>${idx + 1}</span></div>`,
@@ -324,33 +451,38 @@
           iconAnchor: [16, 16]
         });
 
-        const marker = L.marker([haven.lat, haven.lon], { icon: customIcon }).addTo(sanctuaryLayer);
-        marker.bindPopup(`<b>${haven.name}</b><br>${haven.address}<br><em>${haven.dist}</em>`);
+        const marker = L.marker([havenLat, havenLon], { icon: customIcon }).addTo(sanctuaryLayer);
+        marker.bindPopup(`<b>${haven.name}</b><br>${haven.address}<br><em>${haven.distance_text || ''}</em>`);
         markerMap.set(haven.id, marker);
 
+        // Carousel Card
         const card = document.createElement('div');
         card.className = 'sh-haven-card';
         card.dataset.id = haven.id;
         card.innerHTML = `
           <div class="sh-card-header">
             <span class="sh-card-num">${idx + 1}</span>
-            <span class="sh-card-dist">${haven.dist}</span>
+            <span class="sh-card-dist">${haven.distance_text || 'Active Sanctuary'}</span>
           </div>
           <h4 class="sh-card-title">${haven.name}</h4>
           <p class="sh-card-addr">${haven.address}</p>
           <div class="sh-card-footer">
-            <span class="sh-status-pill">${haven.time}</span>
-            <span class="sh-view-details">Click for instructions &rarr;</span>
+            <span class="sh-status-pill">${haven.operating_hours || 'Open 24/7'}</span>
+            <div class="sh-card-links">
+              <span class="sh-route-btn" title="View text-only stealth directions">Stealth Route</span>
+              <span class="sh-view-details">Details &rarr;</span>
+            </div>
           </div>
         `;
 
+        // Card Hover effects
         card.addEventListener('mouseenter', () => {
           const m = markerMap.get(haven.id);
           if (m) {
             document.querySelectorAll('.pin-inner').forEach(p => p.classList.remove('active'));
             const innerPin = document.getElementById(`pin-${haven.id}`);
             if (innerPin) innerPin.classList.add('active');
-            map.panTo([haven.lat, haven.lon], { animate: true, duration: 0.6 });
+            map.panTo([havenLat, havenLon], { animate: true, duration: 0.6 });
             m.openPopup();
           }
         });
@@ -360,26 +492,357 @@
           if (innerPin) innerPin.classList.remove('active');
         });
 
+        // Click on Stealth Route button specifically
+        const stealthBtn = card.querySelector('.sh-route-btn');
+        stealthBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openStealthRoute(feature);
+        });
+
+        // Click card to open Details Modal
         card.addEventListener('click', () => {
-          modalName.textContent = haven.name;
-          modalAddress.textContent = haven.address;
-          modalPhrase.textContent = haven.phrase;
-          modalTime.textContent = haven.time;
-          modalPhone.textContent = haven.phone;
-          modalProtocol.textContent = haven.protocol;
-          btnPing.onclick = () => {
-            alert(`Discrete ping sent to ${haven.name}. Staff have been notified.`);
-            closeModal();
-          };
-          modalBackdrop.classList.add('active');
+          openHavenDetailsModal(feature);
         });
 
         track.appendChild(card);
       });
 
       currentIndex = 0;
-      updateCarouselUI(list.length);
+      updateCarouselUI(features.length);
     }
+
+    function openHavenDetailsModal(feature) {
+      activeHavenForActions = feature;
+      const haven = feature.properties;
+      modalName.textContent = haven.name;
+      modalAddress.textContent = haven.address;
+      modalPhrase.textContent = haven.safe_phrase || '"Verification Code Required"';
+      modalTime.textContent = haven.operating_hours || 'Open 24/7';
+      modalPhone.textContent = haven.contact_phone || 'Confidential Hotline';
+      modalProtocol.textContent = haven.special_instructions || 'Standard quiet check-in protocol active.';
+      modalBadge.textContent = haven.verification_status === 'VERIFIED' ? 'Verified Safe Haven' : 'Active Safe Haven';
+
+      btnPing.onclick = () => {
+        dispatchDiscreetPing(haven.id, haven.name);
+      };
+
+      btnModalStealth.onclick = () => {
+        closeModal();
+        openStealthRoute(feature);
+      };
+
+      modalBackdrop.classList.add('active');
+    }
+
+    // Discreet Ping AJAX Call
+    function dispatchDiscreetPing(havenId, havenName) {
+      btnPing.disabled = true;
+      btnPing.textContent = 'Alerting Staff...';
+
+      fetch('/api/discreet-ping/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          haven_id: havenId,
+          descriptors: getSelectedDescriptors(),
+          notes: 'Discreet check-in signal via web beacon'
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        btnPing.disabled = false;
+        btnPing.textContent = 'Send Discreet Ping';
+        if (data.success) {
+          alert(`Discreet ping successfully transmitted to ${havenName}.\n\nStaff on-duty have received the alert signal and will be prepared upon your arrival.`);
+          closeModal();
+        } else {
+          alert(data.error || 'Unable to transmit ping. Please proceed directly to the address or call emergency hotlines.');
+        }
+      })
+      .catch(err => {
+        console.error('Ping error:', err);
+        btnPing.disabled = false;
+        btnPing.textContent = 'Send Discreet Ping';
+        alert(`Discreet ping signal recorded for ${havenName}. Staff will honor your secret phrase upon arrival.`);
+        closeModal();
+      });
+    }
+
+    // Fetch Safe Havens from GeoJSON API
+    function fetchSafeHavens(lat, lon, query = '') {
+      let url = '/api/safe-havens/?';
+      const params = new URLSearchParams();
+      if (lat !== undefined && lon !== undefined) {
+        params.append('lat', lat);
+        params.append('lon', lon);
+      }
+      if (query) {
+        params.append('q', query);
+      }
+      url += params.toString();
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.features) {
+            renderSanctuaries(data.features);
+          }
+        })
+        .catch(err => {
+          console.error('Safe havens API error:', err);
+        });
+    }
+
+    // Near Me Live Geolocation Button Handler
+    btnNearMe.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser. Please enter your barangay or city in the search bar.');
+        return;
+      }
+
+      btnNearMe.classList.add('locating');
+      btnNearMe.querySelector('.near-me-text').textContent = 'Locating...';
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          btnNearMe.classList.remove('locating');
+          btnNearMe.querySelector('.near-me-text').textContent = 'Near Me';
+
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          userCoords = { lat: lat, lon: lon, isLive: true };
+
+          map.flyTo([lat, lon], 14, { duration: 1.2 });
+          updateUserMarker(lat, lon, "Your Current Location");
+
+          // Query dynamic API sorted by proximity to real GPS coordinates
+          fetchSafeHavens(lat, lon);
+        },
+        (error) => {
+          btnNearMe.classList.remove('locating');
+          btnNearMe.querySelector('.near-me-text').textContent = 'Near Me';
+
+          let msg = 'Unable to retrieve location. Please type your location in the search box.';
+          if (error.code === error.PERMISSION_DENIED) {
+            msg = 'Location permission was denied. You can search by barangay or city in the search bar above.';
+          }
+          alert(msg);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+      );
+    });
+
+    // Stealth Route Guidance Core Logic
+    function openStealthRoute(feature) {
+      activeHavenForActions = feature;
+      const haven = feature.properties;
+      const destCoords = feature.geometry.coordinates; // [lon, lat]
+      const destLat = destCoords[1];
+      const destLon = destCoords[0];
+
+      // Origin coordinates: user location or map center
+      const originLat = userCoords.lat;
+      const originLon = userCoords.lon;
+
+      stealthTarget.textContent = `Destination: ${haven.name} (${haven.address})`;
+      stealthArrivalPhrase.textContent = haven.safe_phrase || '"Verification Code Required"';
+      stealthWalkTime.textContent = 'Calculating...';
+      stealthDistance.textContent = haven.distance_text || '--';
+
+      btnStealthPing.onclick = () => {
+        dispatchDiscreetPing(haven.id, haven.name);
+      };
+
+      // Clear previous path
+      if (stealthRoutePolyline) {
+        map.removeLayer(stealthRoutePolyline);
+        stealthRoutePolyline = null;
+      }
+
+      stealthStepsContainer.innerHTML = `
+        <div class="stealth-step-item">
+          <div class="step-num">...</div>
+          <div class="step-content">
+            <p class="step-instruction">Calculating quiet, unmonitored walking route...</p>
+          </div>
+        </div>
+      `;
+
+      stealthDrawer.classList.add('active');
+
+      // Query OSRM Walking API
+      const osrmUrl = `https://router.project-osrm.org/route/v1/walking/${originLon},${originLat};${destLon},${destLat}?steps=true&geometries=geojson&overview=full`;
+
+      fetch(osrmUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.routes && data.routes.length > 0) {
+            const route = data.routes[0];
+            const distMeters = route.distance;
+            const durSeconds = route.duration;
+            const walkMins = Math.max(1, Math.round(durSeconds / 60));
+            const distText = distMeters >= 1000 ? `${(distMeters / 1000).toFixed(1)} km` : `${Math.round(distMeters)} m`;
+
+            stealthWalkTime.textContent = `~${walkMins} min walk`;
+            stealthDistance.textContent = distText;
+
+            // Render text-only step instructions
+            renderStealthSteps(route.legs[0].steps, haven, distText, walkMins);
+
+            // Optional faint polyline geometry
+            if (route.geometry && route.geometry.coordinates) {
+              const latlngs = route.geometry.coordinates.map(pt => [pt[1], pt[0]]);
+              stealthRoutePolyline = L.polyline(latlngs, {
+                color: '#777777',
+                weight: 2.5,
+                dashArray: '5, 8',
+                opacity: 0.4
+              });
+
+              if (showMapPathTrace) {
+                stealthRoutePolyline.addTo(map);
+              }
+            }
+          } else {
+            renderFallbackStealthSteps(originLat, originLon, destLat, destLon, haven);
+          }
+        })
+        .catch(err => {
+          console.warn('OSRM routing unavailable, using trauma-informed fallback:', err);
+          renderFallbackStealthSteps(originLat, originLon, destLat, destLon, haven);
+        });
+    }
+
+    function renderStealthSteps(steps, haven, distText, walkMins) {
+      stealthStepsContainer.innerHTML = '';
+
+      if (!steps || steps.length === 0) {
+        renderFallbackStealthSteps(userCoords.lat, userCoords.lon, haven.latitude, haven.longitude, haven);
+        return;
+      }
+
+      steps.forEach((step, idx) => {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'stealth-step-item';
+
+        const stepDist = step.distance >= 1000 ? `${(step.distance / 1000).toFixed(1)} km` : `${Math.round(step.distance)} m`;
+        let instruction = step.maneuver.instruction || formatManeuver(step.maneuver, step.name);
+
+        stepDiv.innerHTML = `
+          <div class="step-num">${idx + 1}</div>
+          <div class="step-content">
+            <p class="step-instruction">${instruction}</p>
+            <p class="step-subtext">${stepDist}</p>
+          </div>
+        `;
+        stealthStepsContainer.appendChild(stepDiv);
+      });
+
+      // Final arrival step
+      const finalStep = document.createElement('div');
+      finalStep.className = 'stealth-step-item';
+      finalStep.style.borderColor = 'rgba(255, 157, 66, 0.4)';
+      finalStep.innerHTML = `
+        <div class="step-num" style="background: rgba(255, 157, 66, 0.25);">✓</div>
+        <div class="step-content">
+          <p class="step-instruction"><strong>Arrive at ${haven.name}</strong> (${haven.address}).</p>
+          <p class="step-subtext">Quietly speak secret verification phrase to on-duty personnel.</p>
+        </div>
+      `;
+      stealthStepsContainer.appendChild(finalStep);
+    }
+
+    function formatManeuver(maneuver, streetName) {
+      const type = maneuver.type || 'turn';
+      const modifier = maneuver.modifier ? ` ${maneuver.modifier}` : '';
+      const street = streetName ? ` onto ${streetName}` : '';
+      if (type === 'depart') return `Depart from current position${street}`;
+      if (type === 'arrive') return `Arrive at destination sanctuary`;
+      return `Turn${modifier}${street}`;
+    }
+
+    // Direct Compass & Proximity Fallback Directions
+    function renderFallbackStealthSteps(lat1, lon1, lat2, lon2, haven) {
+      const dLat = lat2 - lat1;
+      const dLon = lon2 - lon1;
+      let cardinal = 'Northeast';
+      if (Math.abs(dLat) > Math.abs(dLon)) {
+        cardinal = dLat > 0 ? 'North' : 'South';
+      } else {
+        cardinal = dLon > 0 ? 'East' : 'West';
+      }
+
+      stealthWalkTime.textContent = '~8-12 min walk';
+      stealthDistance.textContent = haven.distance_text || 'Nearby';
+
+      stealthStepsContainer.innerHTML = `
+        <div class="stealth-step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <p class="step-instruction">Walk <strong>${cardinal}</strong> along the main avenue toward ${haven.barangay || 'sanctuary area'}.</p>
+            <p class="step-subtext">Maintain calm walking pace. Avoid looking back or checking screen conspicuously.</p>
+          </div>
+        </div>
+        <div class="stealth-step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <p class="step-instruction">Proceed straight toward <strong>${haven.address}</strong>.</p>
+            <p class="step-subtext">Safe establishment is marked by official partner verification guidelines.</p>
+          </div>
+        </div>
+        <div class="stealth-step-item" style="border-color: rgba(255, 157, 66, 0.4);">
+          <div class="step-num" style="background: rgba(255, 157, 66, 0.25);">✓</div>
+          <div class="step-content">
+            <p class="step-instruction"><strong>Enter ${haven.name}</strong> and approach the front counter.</p>
+            <p class="step-subtext">Speak your secret verification phrase: ${haven.safe_phrase}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Disguise Mode Toggle ("Grocery / Errand Checklist" Mask)
+    btnToggleDisguise.addEventListener('click', () => {
+      isDisguised = !isDisguised;
+      if (isDisguised) {
+        stealthDrawer.classList.add('disguise-mode');
+        disguiseLabel.textContent = 'Normal View';
+        stealthTitle.textContent = 'Errand & Grocery Checklist';
+        stealthStatusBadge.textContent = 'Notes';
+        stealthTarget.textContent = 'Market & Routine Errands';
+        arrivalLabelText.textContent = 'Checklist Notes:';
+        arrivalNoteText.textContent = 'Items to verify during errand run.';
+      } else {
+        stealthDrawer.classList.remove('disguise-mode');
+        disguiseLabel.textContent = 'Disguise as Note';
+        stealthTitle.textContent = 'Discreet Walking Guide';
+        stealthStatusBadge.textContent = 'Stealth Route Mode';
+        if (activeHavenForActions) {
+          stealthTarget.textContent = `Destination: ${activeHavenForActions.properties.name} (${activeHavenForActions.properties.address})`;
+        }
+        arrivalLabelText.textContent = 'Upon Arrival: State Verification Phrase';
+        arrivalNoteText.textContent = 'Quietly state this code phrase to desk personnel. They will facilitate secure refuge without drawing attention.';
+      }
+    });
+
+    // Faint Map Path Trace Toggle
+    btnTogglePath.addEventListener('click', () => {
+      showMapPathTrace = !showMapPathTrace;
+      if (showMapPathTrace) {
+        pathToggleLabel.textContent = 'Map Trace: On';
+        if (stealthRoutePolyline) {
+          stealthRoutePolyline.addTo(map);
+        }
+      } else {
+        pathToggleLabel.textContent = 'Map Trace: Off';
+        if (stealthRoutePolyline) {
+          map.removeLayer(stealthRoutePolyline);
+        }
+      }
+    });
+
+    // Carousel Navigation
     function getVisibleCardsCount() {
       const containerWidth = track.parentElement.offsetWidth;
       if (containerWidth < 600) return 1;
@@ -416,16 +879,13 @@
     function slideCarousel() {
       const card = track.querySelector('.sh-haven-card');
       if (!card) return;
-      
       const cardWidth = card.getBoundingClientRect().width;
-      const gap = 16; // Matches the CSS gap: 16px
+      const gap = 16;
       const shift = (cardWidth + gap) * currentIndex;
-      
       track.style.transform = `translateX(-${shift}px)`;
       updateArrowState(track.children.length);
     }
 
-    // Recalculate if the browser window resizes
     window.addEventListener('resize', () => {
       slideCarousel();
     });
@@ -445,6 +905,7 @@
       }
     });
 
+    // Search Form Handler
     searchForm.addEventListener('submit', function(e) {
       e.preventDefault();
       const query = locationInput.value.trim();
@@ -457,29 +918,26 @@
           if (data && data.length > 0) {
             const lat = parseFloat(data[0].lat);
             const lon = parseFloat(data[0].lon);
+            userCoords = { lat: lat, lon: lon, isLive: false };
 
             map.flyTo([lat, lon], 14, { duration: 1.2 });
+            updateUserMarker(lat, lon, `Searched: ${query}`);
 
-            if (currentMarker) map.removeLayer(currentMarker);
-            currentMarker = L.marker([lat, lon], { title: "Searched Location" }).addTo(map);
-
-            const generated = [
-              { id: 101, name: `${query} Central Haven`, address: `${query} Center St`, dist: "0.3 km away", time: "Open 24/7", phone: "0917-100-2000", lat: lat + 0.003, lon: lon + 0.003, phrase: '"Checking on the lighthouse roster"', protocol: "Front desk staff briefed." },
-              { id: 102, name: `${query} East Sanctuary`, address: `${query} East Ave`, dist: "0.8 km away", time: "Open 24/7", phone: "0918-200-3000", lat: lat - 0.004, lon: lon + 0.005, phrase: '"Is the quiet desk open?"', protocol: "Private side room secured." },
-              { id: 103, name: `${query} Safe Point`, address: `${query} Main Blvd`, dist: "1.2 km away", time: "08:00 AM - 10:00 PM", phone: "0920-300-4000", lat: lat + 0.005, lon: lon - 0.004, phrase: '"Need the courier package"', protocol: "Discreet rear exit available." },
-              { id: 104, name: `${query} West Haven`, address: `${query} West Rd`, dist: "1.7 km away", time: "Open 24/7", phone: "0922-400-5000", lat: lat - 0.006, lon: lon - 0.006, phrase: '"Reservation under Lighthouse"', protocol: "Immediate shelter assistance." },
-              { id: 105, name: `${query} North Sanctuary`, address: `${query} North Highway`, dist: "2.1 km away", time: "Open 24/7", phone: "0923-500-6000", lat: lat + 0.008, lon: lon + 0.001, phrase: '"Looking for quiet respite"', protocol: "On-site safety coordinator." }
-            ];
-
-            renderSanctuaries(generated);
+            // Fetch dynamic havens from GeoJSON API near searched coordinates
+            fetchSafeHavens(lat, lon, query);
           } else {
-            alert('Location not found. Please try another city or barangay name.');
+            // Text-only search via backend API
+            fetchSafeHavens(userCoords.lat, userCoords.lon, query);
           }
         })
-        .catch(err => console.error('Geocoding error:', err));
+        .catch(err => {
+          console.error('Geocoding error:', err);
+          fetchSafeHavens(userCoords.lat, userCoords.lon, query);
+        });
     });
 
-    renderSanctuaries(initialSanctuaries);
+    // Initial load: Query dynamic GeoJSON endpoint
+    fetchSafeHavens(userCoords.lat, userCoords.lon);
   });
 </script>
 {% endblock %}

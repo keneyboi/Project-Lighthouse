@@ -53,6 +53,22 @@ class SafeHaven(models.Model):
     def __str__(self):
         return f"{self.name} ({self.barangay}, {self.city})"
 
+    @property
+    def address(self):
+        parts = [p for p in [self.barangay, self.city, self.province] if p]
+        return ", ".join(parts) if parts else "Location on file"
+
+    @property
+    def operating_hours_display(self):
+        if isinstance(self.operating_hours, dict) and self.operating_hours:
+            if 'summary' in self.operating_hours:
+                return str(self.operating_hours['summary'])
+            # If standard days exist, build readable string
+            return ", ".join(f"{k}: {v}" for k, v in self.operating_hours.items())
+        elif isinstance(self.operating_hours, str) and self.operating_hours.strip():
+            return self.operating_hours
+        return "Open 24/7"
+
 
 # Protocol Checklist connected to EstablishmentProfile
 class ProtocolChecklist(models.Model):
